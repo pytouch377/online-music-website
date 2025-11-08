@@ -5,8 +5,25 @@ from werkzeug.utils import secure_filename
 from app import db
 from app.models import Song, Playlist, PlaylistItem
 from app.forms import SongUploadForm, PlaylistForm
+import uuid
+from werkzeug.utils import secure_filename
+from flask import current_app
 
 bp = Blueprint('main', __name__)
+
+# 允许的文件扩展名
+ALLOWED_AUDIO_EXTENSIONS = {'mp3', 'wav', 'ogg', 'flac', 'm4a'}
+ALLOWED_IMAGE_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
+
+def allowed_file(filename, allowed_extensions):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in allowed_extensions
+
+def get_unique_filename(filename):
+    """生成唯一文件名防止冲突"""
+    ext = filename.rsplit('.', 1)[1].lower()
+    unique_filename = f"{uuid.uuid4().hex}.{ext}"
+    return unique_filename
 
 @bp.route('/')
 def index():
@@ -18,34 +35,63 @@ def index():
 def upload():
     form = SongUploadForm()
     if form.validate_on_submit():
-        # 处理音频文件上传
+        # 检查音频文件
         audio_file = form.audio_file.data
-        audio_filename = secure_filename(audio_file.filename)
-        audio_path = os.path.join('uploads', 'audio', audio_filename)
-        audio_file.save(os.path.join('app/static', audio_path))
+        if not audio_file or not allowed_file(audio_file.filename, ALLOWED_AUDIO_EXTENSIONS):
+            flash('Please select a valid audio file (MP3, WAV, OGG, FLAC, M4A).', 'error')
+            return render_template('upload.html', title='Upload Song', form=form)
         
-        # 处理封面图片上传（如果有）
-        cover_path = None
-        if form.cover_image.data:
-            cover_file = form.cover_image.data
-            cover_filename = secure_filename(cover_file.filename)
-            cover_path = os.path.join('uploads', 'covers', cover_filename)
-            cover_file.save(os.path.join('app/static', cover_path))
-        
-        song = Song(
-            title=form.title.data,
-            artist=form.artist.data,
-            album=form.album.data,
-            genre=form.genre.data,
-            file_path=audio_path,
-            cover_image=cover_path,
-            user_id=current_user.id
-        )
-        
-        db.session.add(song)
-        db.session.commit()
-        flash('Your song has been uploaded!')
-        return redirect(url_for('main.index'))
+        try:
+            # 创建上传目录 - 使用绝对路径
+            upload_base = os.path.join(current_app.root_path, 'static', 'uploads')
+            audio_upload_dir = os.path.join(upload_base, 'audio')
+            cover_upload_dir = os.path.join(upload_base, 'covers')
+            
+            os.makedirs(audio_upload_dir, exist_ok=True)
+            os.makedirs(cover_upload_dir, exist_ok=True)
+            
+            # 处理音频文件上传
+            audio_filename = secure_filename(audio_file.filename)
+            unique_audio_filename = get_unique_filename(audio_filename)
+            audio_save_path = os.path.join(audio_upload_dir, unique_audio_filename)
+            audio_file.save(audio_save_path)
+            
+            # 数据库中的相对路径
+            audio_db_path = os.path.join('uploads', 'audio', unique_audio_filename)
+            
+            # 处理封面图片上传（如果有）
+            cover_db_path = None
+            if form.cover_image.data and form.cover_image.data.filename:
+                cover_file = form.cover_image.data
+                if allowed_file(cover_file.filename, ALLOWED_IMAGE_EXTENSIONS):
+                    cover_filename = secure_filename(cover_file.filename)
+                    unique_cover_filename = get_unique_filename(cover_filename)
+                    cover_save_path = os.path.join(cover_upload_dir, unique_cover_filename)
+                    cover_file.save(cover_save_path)
+                    cover_db_path = os.path.join('uploads', 'covers', unique_cover_filename)
+                else:
+                    flash('Invalid image file type. Please use JPG, PNG, or GIF.', 'warning')
+            
+            # 创建歌曲记录
+            song = Song(
+                title=form.title.data,
+                artist=form.artist.data,
+                album=form.album.data or '',
+                genre=form.genre.data or '',
+                file_path=audio_db_path,
+                cover_image=cover_db_path,
+                user_id=current_user.id
+            )
+            
+            db.session.add(song)
+            db.session.commit()
+            flash('🎵 Your song has been uploaded successfully!', 'success')
+            return redirect(url_for('main.library'))
+            
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error uploading file: {str(e)}', 'error')
+            print(f"Upload error: {e}")  # 用于调试
     
     return render_template('upload.html', title='Upload Song', form=form)
 

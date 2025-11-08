@@ -11,17 +11,52 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('main.index') }}">MusicStream</a>
-            <div class="navbar-nav">
-                <a class="nav-link" href="{{ url_for('main.index') }}">Home</a>
-                <a class="nav-link" href="{{ url_for('main.library') }}">Library</a>
-                {% if current_user.is_authenticated %}
-                    <a class="nav-link" href="{{ url_for('main.upload') }}">Upload</a>
-                    <a class="nav-link" href="{{ url_for('main.playlists') }}">Playlists</a>
-                    <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
-                {% else %}
-                    <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
-                    <a class="nav-link" href="{{ url_for('auth.register') }}">Register</a>
-                {% endif %}
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.index') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.library') }}">Library</a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.upload') }}">Upload</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.playlists') }}">Playlists</a>
+                    </li>
+                    {% endif %}
+                </ul>
+                
+                <!-- 搜索框 -->
+                <form class="d-flex me-2" action="{{ url_for('main.search') }}" method="get">
+                    <input class="form-control me-2" type="search" name="q" placeholder="Search music..." aria-label="Search">
+                    <button class="btn btn-outline-light" type="submit">Search</button>
+                </form>
+                
+                <ul class="navbar-nav">
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.playlists') }}">Hello, {{ current_user.username }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.register') }}">Register</a>
+                    </li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </nav>
