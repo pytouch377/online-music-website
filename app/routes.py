@@ -119,14 +119,20 @@ def add_to_playlist(song_id):
 
 @bp.route('/search')
 def search():
-    query = request.args.get('q', '')
+    query = request.args.get('q', '').strip()
+    page = request.args.get('page', 1, type=int)
+    
     if query:
+        # 实现真正的搜索功能
         songs = Song.query.filter(
             (Song.title.ilike(f'%{query}%')) | 
             (Song.artist.ilike(f'%{query}%')) |
-            (Song.album.ilike(f'%{query}%'))
-        ).all()
+            (Song.album.ilike(f'%{query}%')) |
+            (Song.genre.ilike(f'%{query}%'))
+        ).order_by(Song.title).paginate(
+            page=page, per_page=12, error_out=False)
     else:
+        # 如果没有搜索词，显示空结果
         songs = []
     
     return render_template('search.html', title='Search', songs=songs, query=query)

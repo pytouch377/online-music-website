@@ -3,28 +3,31 @@
 {% block content %}
 <div class="row">
     <div class="col-12">
-        <h2>Search Results</h2>
+        <h2>Search Music</h2>
         
         <form action="{{ url_for('main.search') }}" method="get" class="mb-4">
             <div class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="Search for songs, artists, or albums..." value="{{ query }}">
+                <input type="text" name="q" class="form-control" placeholder="Search for songs, artists, albums, or genres..." value="{{ query }}">
                 <button class="btn btn-primary" type="submit">Search</button>
             </div>
         </form>
 
         {% if query %}
-            {% if songs %}
-            <p>Found {{ songs|length }} result(s) for "{{ query }}"</p>
+            {% if songs and songs.items %}
+            <p class="text-muted">Found {{ songs.total }} result(s) for "{{ query }}"</p>
             <div class="row">
-                {% for song in songs %}
-                <div class="col-md-6 mb-3">
-                    <div class="card">
+                {% for song in songs.items %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
                         <div class="card-body">
                             <h5 class="card-title">{{ song.title }}</h5>
                             <p class="card-text">
                                 <strong>Artist:</strong> {{ song.artist }}<br>
-                                {% if song.album %}<strong>Album:</strong> {{ song.album }}{% endif %}
+                                {% if song.album %}<strong>Album:</strong> {{ song.album }}<br>{% endif %}
+                                {% if song.genre %}<strong>Genre:</strong> {{ song.genre }}{% endif %}
                             </p>
+                        </div>
+                        <div class="card-footer">
                             <button class="btn btn-primary btn-sm play-btn" data-song-id="{{ song.id }}">
                                 Play
                             </button>
@@ -39,14 +42,46 @@
                 </div>
                 {% endfor %}
             </div>
+
+            <!-- 分页 -->
+            {% if songs.pages > 1 %}
+            <nav aria-label="Search results pages">
+                <ul class="pagination justify-content-center">
+                    {% if songs.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('main.search', q=query, page=songs.prev_num) }}">Previous</a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for page_num in songs.iter_pages(left_edge=2, right_edge=2, left_current=2, right_current=2) %}
+                        {% if page_num %}
+                            <li class="page-item {% if page_num == songs.page %}active{% endif %}">
+                                <a class="page-link" href="{{ url_for('main.search', q=query, page=page_num) }}">{{ page_num }}</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled"><span class="page-link">…</span></li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if songs.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('main.search', q=query, page=songs.next_num) }}">Next</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
             {% else %}
             <div class="alert alert-info">
-                No results found for "{{ query }}". Try different keywords.
+                <h5>No results found</h5>
+                <p>No songs found matching "{{ query }}". Try different keywords or browse the <a href="{{ url_for('main.library') }}">music library</a>.</p>
             </div>
             {% endif %}
         {% else %}
-            <div class="alert alert-info">
-                Enter a search term to find music.
+            <div class="alert alert-light">
+                <h5>Search for music</h5>
+                <p>Enter a song title, artist name, album, or genre to find music in our library.</p>
             </div>
         {% endif %}
     </div>
