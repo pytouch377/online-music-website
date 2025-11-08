@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h2>Upload Song</h2>
+        <form action="" method="post" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.title.label(class="form-label") }}
+                {{ form.title(class="form-control") }}
+                {% for error in form.title.errors %}
+                <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="mb-3">
+                {{ form.artist.label(class="form-label") }}
+                {{ form.artist(class="form-control") }}
+                {% for error in form.artist.errors %}
+                <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="mb-3">
+                {{ form.album.label(class="form-label") }}
+                {{ form.album(class="form-control") }}
+                {% for error in form.album.errors %}
+                <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="mb-3">
+                {{ form.genre.label(class="form-label") }}
+                {{ form.genre(class="form-control") }}
+                {% for error in form.genre.errors %}
+                <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="mb-3">
+                {{ form.audio_file.label(class="form-label") }}
+                {{ form.audio_file(class="form-control") }}
+                {% for error in form.audio_file.errors %}
+                <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+                <div class="form-text">Supported formats: MP3, WAV, OGG</div>
+            </div>
+            <div class="mb-3">
+                {{ form.cover_image.label(class="form-label") }}
+                {{ form.cover_image(class="form-control") }}
+                {% for error in form.cover_image.errors %}
+                <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+                <div class="form-text">Optional: JPEG, PNG, GIF</div>
+            </div>
+            <div class="mb-3">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

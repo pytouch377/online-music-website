@@ -1,0 +1,32 @@
+# Python virtual environment
+music-env/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Flask file uploads
+app/static/uploads/audio/*
+app/static/uploads/covers/*
+!app/static/uploads/audio/.gitkeep
+!app/static/uploads/covers/.gitkeep
+
+# Database
+*.db
+*.sqlite3
+
+# Environment variables
+.env
+
+# IDE specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Local development configuration
+instance/
