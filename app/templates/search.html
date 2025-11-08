@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2>Search Results</h2>
+        
+        <form action="{{ url_for('main.search') }}" method="get" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Search for songs, artists, or albums..." value="{{ query }}">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </form>
+
+        {% if query %}
+            {% if songs %}
+            <p>Found {{ songs|length }} result(s) for "{{ query }}"</p>
+            <div class="row">
+                {% for song in songs %}
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ song.title }}</h5>
+                            <p class="card-text">
+                                <strong>Artist:</strong> {{ song.artist }}<br>
+                                {% if song.album %}<strong>Album:</strong> {{ song.album }}{% endif %}
+                            </p>
+                            <button class="btn btn-primary btn-sm play-btn" data-song-id="{{ song.id }}">
+                                Play
+                            </button>
+                            {% if current_user.is_authenticated %}
+                            <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" 
+                                    data-bs-target="#addToPlaylistModal" data-song-id="{{ song.id }}">
+                                Add to Playlist
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                No results found for "{{ query }}". Try different keywords.
+            </div>
+            {% endif %}
+        {% else %}
+            <div class="alert alert-info">
+                Enter a search term to find music.
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Add to Playlist Modal -->
+<div class="modal fade" id="addToPlaylistModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add to Playlist</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addToPlaylistForm">
+                    <input type="hidden" id="modalSongId" name="song_id">
+                    <div class="mb-3">
+                        <label for="playlistSelect" class="form-label">Select Playlist</label>
+                        <select class="form-select" id="playlistSelect" name="playlist_id" required>
+                            <option value="">Choose a playlist...</option>
+                            {% for playlist in current_user.playlists %}
+                            <option value="{{ playlist.id }}">{{ playlist.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add to Playlist</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
