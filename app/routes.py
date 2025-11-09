@@ -3,10 +3,9 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
 from app import db
-from app.models import Song, Playlist, PlaylistItem
+from app.models import Song, Playlist, PlaylistItem, Favorite, User, Comment
 from app.forms import SongUploadForm, PlaylistForm
 import uuid
-from werkzeug.utils import secure_filename
 from flask import current_app
 
 bp = Blueprint('main', __name__)
@@ -25,10 +24,7 @@ def get_unique_filename(filename):
     unique_filename = f"{uuid.uuid4().hex}.{ext}"
     return unique_filename
 
-@bp.route('/')
-def index():
-    songs = Song.query.order_by(Song.upload_date.desc()).limit(10).all()
-    return render_template('index.html', title='Home', songs=songs)
+# 首页路由定义在文件下方（避免重复定义）
 
 @bp.route('/upload', methods=['GET', 'POST'])
 @login_required
@@ -57,7 +53,7 @@ def upload():
             audio_file.save(audio_save_path)
             
             # 数据库中的相对路径
-            audio_db_path = os.path.join('uploads', 'audio', unique_audio_filename)
+            audio_db_path = os.path.join('uploads', 'audio', unique_audio_filename).replace('\\', '/')
             
             # 处理封面图片上传（如果有）
             cover_db_path = None
@@ -68,7 +64,7 @@ def upload():
                     unique_cover_filename = get_unique_filename(cover_filename)
                     cover_save_path = os.path.join(cover_upload_dir, unique_cover_filename)
                     cover_file.save(cover_save_path)
-                    cover_db_path = os.path.join('uploads', 'covers', unique_cover_filename)
+                    cover_db_path = os.path.join('uploads', 'covers', unique_cover_filename).replace('\\', '/')
                 else:
                     flash('Invalid image file type. Please use JPG, PNG, or GIF.', 'warning')
             
@@ -80,12 +76,16 @@ def upload():
                 genre=form.genre.data or '',
                 file_path=audio_db_path,
                 cover_image=cover_db_path,
-                user_id=current_user.id
+                user_id=current_user.id,
+                visibility=form.visibility.data  # 确保这行存在
             )
             
             db.session.add(song)
             db.session.commit()
-            flash('🎵 Your song has been uploaded successfully!', 'success')
+
+            visibility_msg = "publicly shared" if form.visibility.data == 'public' else "privately saved"
+
+            flash(f'🎵 Your song has been uploaded successfully and is {visibility_msg}!', 'success')
             return redirect(url_for('main.library'))
             
         except Exception as e:
@@ -98,7 +98,8 @@ def upload():
 @bp.route('/library')
 def library():
     page = request.args.get('page', 1, type=int)
-    songs = Song.query.order_by(Song.upload_date.desc()).paginate(
+    # 只显示公开的音乐
+    songs = Song.query.filter_by(visibility='public').order_by(Song.upload_date.desc()).paginate(
         page=page, per_page=20, error_out=False)
     return render_template('library.html', title='Music Library', songs=songs)
 
@@ -169,8 +170,9 @@ def search():
     page = request.args.get('page', 1, type=int)
     
     if query:
-        # 实现真正的搜索功能
+        # 只在公开音乐中搜索
         songs = Song.query.filter(
+            Song.visibility == 'public',
             (Song.title.ilike(f'%{query}%')) | 
             (Song.artist.ilike(f'%{query}%')) |
             (Song.album.ilike(f'%{query}%')) |
@@ -183,10 +185,78 @@ def search():
     
     return render_template('search.html', title='Search', songs=songs, query=query)
 
+
+
+# 首页 - 显示公共内容和个人推荐
+@bp.route('/')
+def index():
+    # 公共热门歌曲
+    public_songs = Song.query.filter_by(visibility='public').order_by(Song.play_count.desc()).limit(6).all()
+    
+    # 新上传的公共歌曲
+    new_songs = Song.query.filter_by(visibility='public').order_by(Song.upload_date.desc()).limit(6).all()
+    
+    return render_template('index.html', title='Home', 
+                         public_songs=public_songs, new_songs=new_songs)
+
+# 个人收藏
+@bp.route('/favorites')
+@login_required
+def favorites():
+    favorites = Favorite.query.filter_by(user_id=current_user.id).all()
+    favorite_songs = [fav.song for fav in favorites]
+    return render_template('favorites.html', title='My Favorites', songs=favorite_songs)
+
+# 添加/取消收藏
+@bp.route('/favorite/<int:song_id>', methods=['POST'])
+@login_required
+def favorite_song(song_id):
+    song = Song.query.get_or_404(song_id)
+    favorite = Favorite.query.filter_by(user_id=current_user.id, song_id=song_id).first()
+    
+    if favorite:
+        db.session.delete(favorite)
+        db.session.commit()
+        return jsonify({'status': 'removed', 'message': 'Removed from favorites'})
+    else:
+        favorite = Favorite(user_id=current_user.id, song_id=song_id)
+        db.session.add(favorite)
+        db.session.commit()
+        return jsonify({'status': 'added', 'message': 'Added to favorites'})
+
+# 用户个人主页
+@bp.route('/user/<username>')
+def user_profile(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    public_songs = Song.query.filter_by(user_id=user.id, visibility='public').all()
+    public_playlists = Playlist.query.filter_by(user_id=user.id, visibility='public').all()
+    
+    return render_template('user_profile.html', title=f"{username}'s Profile", 
+                         user=user, songs=public_songs, playlists=public_playlists)
+
+@bp.route('/my_music')
+@login_required
+def my_music():
+    """显示用户的所有音乐（公开和私人）"""
+    page = request.args.get('page', 1, type=int)
+    songs = Song.query.filter_by(user_id=current_user.id).order_by(Song.upload_date.desc()).paginate(
+        page=page, per_page=20, error_out=False)
+    return render_template('my_music.html', title='My Music', songs=songs)
+
 # API端点 - 获取歌曲信息
 @bp.route('/api/song/<int:song_id>')
 def get_song(song_id):
     song = Song.query.get_or_404(song_id)
+
+    # 调试信息：检查文件是否存在
+    file_full_path = os.path.join(current_app.root_path, 'static', song.file_path)
+    file_exists = os.path.exists(file_full_path)
+    
+    print(f"🎵 Song: {song.title}")
+    print(f"📁 File path in DB: {song.file_path}")
+    print(f"📁 Full path: {file_full_path}")
+    print(f"✅ File exists: {file_exists}")
+
     return jsonify({
         'id': song.id,
         'title': song.title,
@@ -195,3 +265,40 @@ def get_song(song_id):
         'file_path': url_for('static', filename=song.file_path),
         'cover_image': url_for('static', filename=song.cover_image) if song.cover_image else None
     })
+
+@bp.route('/test_audio')
+def test_audio():
+    """测试音频播放的专用页面"""
+    # 使用多个不同的音频源进行测试
+    test_audios = [
+        {
+            'name': 'Tech House Vibes',
+            'url': 'https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3',
+            'type': 'mp3'
+        },
+        {
+            'name': 'Simple Piano',
+            'url': 'https://assets.mixkit.co/music/preview/mixkit-simple-piano-melody-983.mp3', 
+            'type': 'mp3'
+        }
+    ]
+    
+    return render_template('test_audio.html', title='Audio Test', test_audios=test_audios)
+
+@bp.route('/api/test_audio/<int:index>')
+def api_test_audio(index):
+    """测试音频API端点"""
+    test_audios = [
+        'https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3',
+        'https://assets.mixkit.co/music/preview/mixkit-simple-piano-melody-983.mp3'
+    ]
+    
+    if 0 <= index < len(test_audios):
+        return jsonify({
+            'file_path': test_audios[index],
+            'title': f'Test Audio {index + 1}',
+            'artist': 'Test Artist',
+            'album': 'Test Album'
+        })
+    else:
+        return jsonify({'error': 'Invalid audio index'}), 404
