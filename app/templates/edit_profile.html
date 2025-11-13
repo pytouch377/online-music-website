@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title mb-0">{{ _('Edit Profile') }}</h2>
+            </div>
+            <div class="card-body">
+                <form action="" method="post" enctype="multipart/form-data" novalidate>
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        {{ form.bio.label(class="form-label") }}
+                        {{ form.bio(class="form-control", rows=4) }}
+                        {% for error in form.bio.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                        <div class="form-text">{{ _('Tell others about yourself (max 500 characters)') }}</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.location.label(class="form-label") }}
+                        {{ form.location(class="form-control") }}
+                        {% for error in form.location.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.website.label(class="form-label") }}
+                        {{ form.website(class="form-control") }}
+                        {% for error in form.website.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                        <div class="form-text">{{ _('Your personal website or social media link') }}</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.avatar.label(class="form-label") }}
+                        {{ form.avatar(class="form-control") }}
+                        {% for error in form.avatar.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                        <div class="form-text">{{ _('Recommended: Square image, JPG or PNG') }}</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.submit(class="btn btn-primary") }}
+                        <a href="{{ url_for('main.user_profile', username=current_user.username) }}" 
+                           class="btn btn-secondary">{{ _('Cancel') }}</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

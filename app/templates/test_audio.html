@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2>Audio Playback Test</h2>
+        <p class="text-muted">This page tests audio playback with various sources to identify blocking issues.</p>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Test Audio Files</h5>
+                {% for audio in test_audios %}
+                <div class="mb-3 p-3 border rounded">
+                    <h6>{{ audio.name }}</h6>
+                    <p class="mb-2"><small>URL: {{ audio.url }}</small></p>
+                    <audio controls class="w-100">
+                        <source src="{{ audio.url }}" type="audio/{{ audio.type }}">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <button class="btn btn-primary mt-2 play-test-btn" data-audio-index="{{ loop.index0 }}">
+                        Play via JavaScript
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">Troubleshooting Steps</h5>
+                <ol>
+                    <li>If audio doesn't play, check if ads are being blocked</li>
+                    <li>Try disabling ad blockers for this site</li>
+                    <li>Check browser console for errors (F12)</li>
+                    <li>Try a different browser</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// 测试JavaScript播放
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.play-test-btn').forEach(btn => {
+        btn.addEventListener('click', async function() {
+            const audioIndex = this.getAttribute('data-audio-index');
+            try {
+                const response = await fetch(`/api/test_audio/${audioIndex}`);
+                const audioData = await response.json();
+                
+                if (window.musicPlayer) {
+                    // 模拟歌曲播放
+                    window.musicPlayer.currentSong = audioData;
+                    window.musicPlayer.audio.src = audioData.file_path;
+                    window.musicPlayer.showPlayer();
+                    window.musicPlayer.showNowPlaying(audioData);
+                    
+                    const playPromise = window.musicPlayer.audio.play();
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {
+                            console.log('Test audio playback started');
+                        }).catch(error => {
+                            console.error('Test audio playback failed:', error);
+                            alert('Playback failed: ' + error.message);
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('Error playing test audio:', error);
+                alert('Error: ' + error.message);
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

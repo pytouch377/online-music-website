@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <!-- 用户信息卡片 -->
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                {% if user.avatar %}
+                <img src="{{ url_for('static', filename=user.avatar) }}" 
+                     class="rounded-circle mb-3" 
+                     alt="{{ user.username }}" 
+                     style="width: 150px; height: 150px; object-fit: cover;">
+                {% else %}
+                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto mb-3"
+                     style="width: 150px; height: 150px;">
+                    <span class="text-white h4">{{ user.username[0].upper() }}</span>
+                </div>
+                {% endif %}
+                
+                <h4>{{ user.username }}</h4>
+                
+                {% if user.bio %}
+                <p class="text-muted">{{ user.bio }}</p>
+                {% endif %}
+                
+                {% if user.location %}
+                <p class="text-muted">
+                    📍 {{ user.location }}
+                </p>
+                {% endif %}
+                
+                {% if user.website %}
+                <p>
+                    <a href="{{ user.website }}" target="_blank" class="text-decoration-none">
+                        🔗 {{ _('Website') }}
+                    </a>
+                </p>
+                {% endif %}
+                
+                <!-- 统计数据 -->
+                <div class="row text-center mt-3">
+                    <div class="col-4">
+                        <h5 class="mb-0">{{ user.get_public_songs_count() }}</h5>
+                        <small class="text-muted">{{ _('Songs') }}</small>
+                    </div>
+                    <div class="col-4">
+                        <h5 class="mb-0">{{ user.get_followers_count() }}</h5>
+                        <small class="text-muted">{{ _('Followers') }}</small>
+                    </div>
+                    <div class="col-4">
+                        <h5 class="mb-0">{{ user.get_following_count() }}</h5>
+                        <small class="text-muted">{{ _('Following') }}</small>
+                    </div>
+                </div>
+                
+                <!-- 关注按钮 -->
+                {% if current_user.is_authenticated and current_user != user %}
+                <div class="mt-3">
+                    {% if is_following %}
+                    <form action="{{ url_for('main.unfollow', username=user.username) }}" method="post">
+                        <button type="submit" class="btn btn-outline-secondary btn-sm">
+                            {{ _('Unfollow') }}
+                        </button>
+                    </form>
+                    {% else %}
+                    <form action="{{ url_for('main.follow', username=user.username) }}" method="post">
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            {{ _('Follow') }}
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+                {% endif %}
+                
+                <!-- 编辑资料按钮 -->
+                {% if current_user == user %}
+                <div class="mt-3">
+                    <a href="{{ url_for('main.edit_profile') }}" class="btn btn-outline-primary btn-sm">
+                        {{ _('Edit Profile') }}
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <!-- 用户的公开音乐 -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">{{ _('Public Songs') }}</h5>
+            </div>
+            <div class="card-body">
+                {% if songs %}
+                <div class="row">
+                    {% for song in songs %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ song.title }}</h6>
+                                <p class="card-text mb-1">
+                                    <small class="text-muted">{{ song.artist }}</small>
+                                </p>
+                                <button class="btn btn-primary btn-sm play-btn" data-song-id="{{ song.id }}">
+                                    {{ _('Play') }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                {% if user.get_public_songs_count() > 6 %}
+                <div class="text-center">
+                    <a href="{{ url_for('main.library') }}?user={{ user.username }}" 
+                       class="btn btn-outline-primary btn-sm">
+                        {{ _('View All Songs') }}
+                    </a>
+                </div>
+                {% endif %}
+                
+                {% else %}
+                <p class="text-muted mb-0">{{ _('No public songs yet.') }}</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- 用户的公开播放列表 -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">{{ _('Public Playlists') }}</h5>
+            </div>
+            <div class="card-body">
+                {% if playlists %}
+                <div class="list-group">
+                    {% for playlist in playlists %}
+                    <a href="{{ url_for('main.playlist_detail', playlist_id=playlist.id) }}" 
+                       class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ playlist.name }}</h6>
+                            <small>{{ _('%(count)s songs', count=playlist.items.count()) }}</small>
+                        </div>
+                        {% if playlist.description %}
+                        <p class="mb-1">{{ playlist.description }}</p>
+                        {% endif %}
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted mb-0">{{ _('No public playlists yet.') }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

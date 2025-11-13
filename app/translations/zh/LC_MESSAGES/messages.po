@@ -1,0 +1,947 @@
+# Chinese translations for PROJECT.
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-11-13 23:48+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh\n"
+"Language-Team: zh <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: app/routes.py:195
+msgid "Please select an audio file."
+msgstr "请选择一个音频文件。"
+
+#: app/routes.py:199
+msgid "Please select a valid audio file (MP3, WAV, OGG, FLAC, M4A)."
+msgstr "请选择有效的音频文件（MP3、WAV、OGG、FLAC、M4A）。"
+
+#: app/routes.py:233
+msgid "Invalid image file type. Please use JPG, PNG, or GIF."
+msgstr "图片文件类型无效，请使用 JPG、PNG 或 GIF。"
+
+#: app/routes.py:244 app/routes.py:395
+msgid "NetEase Cloud Music"
+msgstr "网易云音乐"
+
+#: app/routes.py:249 app/routes.py:400
+msgid "QQ Music"
+msgstr "QQ 音乐"
+
+#: app/routes.py:262 app/routes.py:413
+msgid "Apple Music"
+msgstr "Apple Music"
+
+#: app/routes.py:269
+#, python-format
+msgid "🎨 Found and downloaded album cover from %(source)s!"
+msgstr "🎨 已从 %(source)s 找到并下载专辑封面！"
+
+#: app/routes.py:271
+msgid "Cover download failed, please try again later."
+msgstr "封面下载失败，请稍后再试。"
+
+#: app/routes.py:273
+msgid "No album cover was found for this song."
+msgstr "未找到该歌曲的专辑封面。"
+
+#: app/routes.py:276
+#, python-format
+msgid "Error occurred while searching for cover: %(error)s"
+msgstr "搜索封面时发生错误：%(error)s"
+
+#: app/routes.py:293
+msgid "publicly shared"
+msgstr "公开分享"
+
+#: app/routes.py:293
+msgid "privately saved"
+msgstr "私人保存"
+
+#: app/routes.py:294
+#, python-format
+msgid "🎵 Your song has been uploaded successfully and is %(status)s!"
+msgstr "🎵 您的歌曲已成功上传，并已%(status)s！"
+
+#: app/routes.py:305
+#, python-format
+msgid "Error uploading file: %(error)s"
+msgstr "上传文件出错：%(error)s"
+
+#: app/routes.py:348
+msgid "Your playlist has been created!"
+msgstr "播放列表已创建！"
+
+#: app/routes.py:614
+msgid "Your profile has been updated!"
+msgstr "个人资料已更新！"
+
+#: app/routes.py:631
+msgid "You cannot follow yourself!"
+msgstr "不能关注自己！"
+
+#: app/routes.py:636
+#, python-format
+msgid "You are now following %(username)s!"
+msgstr "您已关注 %(username)s！"
+
+#: app/routes.py:646
+#, python-format
+msgid "You have unfollowed %(username)s."
+msgstr "您已取消关注 %(username)s。"
+
+#: app/routes.py:662
+msgid "You can only delete your own songs."
+msgstr "您只能删除自己上传的歌曲。"
+
+#: app/routes.py:681
+msgid "Song deleted successfully!"
+msgstr "歌曲删除成功！"
+
+#: app/routes.py:685
+#, python-format
+msgid "Error deleting song: %(error)s"
+msgstr "删除歌曲出错：%(error)s"
+
+#: app/templates/base.html:80 app/templates/base.html:183
+msgid "▶️ Play"
+msgstr "播放"
+
+#: app/templates/base.html:80 app/templates/base.html:184
+msgid "⏸️ Pause"
+msgstr "⏸️ 暂停"
+
+#: app/templates/base.html:91
+msgid "Home"
+msgstr "首页"
+
+#: app/templates/base.html:94
+msgid "Library"
+msgstr "音乐库"
+
+#: app/templates/base.html:98
+msgid "Upload"
+msgstr "上传"
+
+#: app/templates/base.html:101 app/templates/my_music.html:7
+msgid "My Music"
+msgstr "我的音乐"
+
+#: app/templates/base.html:104
+msgid "Playlists"
+msgstr "播放列表"
+
+#: app/templates/base.html:108
+msgid "Profile"
+msgstr "个人资料"
+
+#: app/templates/base.html:116
+msgid "Search music..."
+msgstr "搜索音乐..."
+
+#: app/templates/base.html:117 app/templates/search.html:11
+msgid "Search"
+msgstr "搜索"
+
+#: app/templates/base.html:123
+msgid "Language"
+msgstr "语言"
+
+#: app/templates/base.html:135
+#, python-format
+msgid "Hello, %(username)s"
+msgstr "您好，%(username)s"
+
+#: app/templates/base.html:139
+msgid "Logout"
+msgstr "退出"
+
+#: app/templates/base.html:143
+msgid "Login"
+msgstr "登录"
+
+#: app/templates/auth/register.html:6 app/templates/base.html:146
+msgid "Register"
+msgstr "注册"
+
+#: app/templates/base.html:174
+msgid "Your browser does not support the audio element."
+msgstr "您的浏览器不支持 audio 音频标签。"
+
+#: app/templates/base.html:185
+msgid "Now Playing:"
+msgstr "正在播放："
+
+#: app/templates/base.html:186
+msgid "Album:"
+msgstr "专辑："
+
+#: app/templates/base.html:187
+msgid "Audio playback error. Please check the file format."
+msgstr "音频播放出错，请检查文件格式。"
+
+#: app/templates/base.html:188
+#, python-format
+msgid "Error playing song: %(error)s"
+msgstr "播放歌曲时出错：%(error)s"
+
+#: app/templates/base.html:189
+#, python-format
+msgid "Unable to play audio: %(error)s"
+msgstr "无法播放音频：%(error)s"
+
+#: app/templates/create_playlist.html:6 app/templates/playlists.html:8
+msgid "Create New Playlist"
+msgstr "创建新播放列表"
+
+#: app/templates/create_playlist.html:25 app/templates/edit_profile.html:52
+#: app/templates/upload.html:146
+msgid "Cancel"
+msgstr "取消"
+
+#: app/templates/edit_profile.html:8 app/templates/user_profile.html:80
+msgid "Edit Profile"
+msgstr "编辑资料"
+
+#: app/templates/edit_profile.html:20
+msgid "Tell others about yourself (max 500 characters)"
+msgstr "向大家介绍自己（最多 500 字）"
+
+#: app/templates/edit_profile.html:37
+msgid "Your personal website or social media link"
+msgstr "您的个人网站或社交媒体链接"
+
+#: app/templates/edit_profile.html:46
+msgid "Recommended: Square image, JPG or PNG"
+msgstr "推荐使用正方形图片，格式为 JPG 或 PNG"
+
+#: app/templates/index.html:6
+msgid "Latest Uploads"
+msgstr "最新上传"
+
+#: app/templates/index.html:15 app/templates/library.html:32
+#: app/templates/my_music.html:42 app/templates/playlist_detail.html:21
+#: app/templates/search.html:32 app/templates/user_profile.html:106
+msgid "Play"
+msgstr "播放"
+
+#: app/templates/index.html:20 app/templates/index.html:43
+#: app/templates/index.html:58 app/templates/library.html:37
+#: app/templates/library.html:102 app/templates/library.html:117
+#: app/templates/my_music.html:47 app/templates/my_music.html:113
+#: app/templates/my_music.html:128 app/templates/search.html:37
+#: app/templates/search.html:95 app/templates/search.html:110
+msgid "Add to Playlist"
+msgstr "添加到播放列表"
+
+#: app/templates/index.html:30
+msgid "Welcome to MusicStream"
+msgstr "欢迎来到音乐流"
+
+#: app/templates/index.html:31
+msgid "Your personal online music streaming platform."
+msgstr "您的个人在线音乐流媒体平台。"
+
+#: app/templates/index.html:33
+msgid "Join Now"
+msgstr "立即加入"
+
+#: app/templates/index.html:50 app/templates/library.html:109
+#: app/templates/my_music.html:120 app/templates/search.html:102
+msgid "Select Playlist"
+msgstr "选择播放列表"
+
+#: app/templates/index.html:52 app/templates/library.html:111
+#: app/templates/my_music.html:122 app/templates/search.html:104
+msgid "Choose a playlist..."
+msgstr "选择一个播放列表..."
+
+#: app/templates/library.html:6
+msgid "Music Library"
+msgstr "音乐库"
+
+#: app/templates/library.html:17 app/templates/my_music.html:20
+msgid "No Cover"
+msgstr "无封面"
+
+#: app/templates/library.html:23 app/templates/my_music.html:26
+#: app/templates/search.html:25
+msgid "Artist"
+msgstr "艺术家"
+
+#: app/templates/library.html:24 app/templates/my_music.html:27
+#: app/templates/search.html:26
+msgid "Album"
+msgstr "专辑"
+
+#: app/templates/library.html:25
+msgid "By"
+msgstr "上传者"
+
+#: app/templates/library.html:44 app/templates/my_music.html:59
+msgid "Are you sure you want to delete this song?"
+msgstr "确定要删除这首歌曲吗？"
+
+#: app/templates/library.html:62 app/templates/my_music.html:77
+#: app/templates/search.html:52
+msgid "Previous"
+msgstr "上一页"
+
+#: app/templates/library.html:78 app/templates/my_music.html:93
+#: app/templates/search.html:68
+msgid "Next"
+msgstr "下一页"
+
+#: app/templates/library.html:85
+msgid "No songs available yet"
+msgstr "暂无歌曲"
+
+#: app/templates/library.html:86
+msgid "The music library is empty. Be the first to upload a song!"
+msgstr "音乐库为空，成为第一个上传歌曲的人吧！"
+
+#: app/templates/library.html:88 app/templates/my_music.html:102
+msgid "Upload Your First Song"
+msgstr "上传您的第一首歌"
+
+#: app/templates/library.html:90
+msgid "Register to Upload Songs"
+msgstr "注册以上传歌曲"
+
+#: app/templates/my_music.html:8 app/templates/upload.html:8
+msgid "Upload New Song"
+msgstr "上传新歌曲"
+
+#: app/templates/my_music.html:28
+msgid "Visibility"
+msgstr "可见性"
+
+#: app/templates/my_music.html:31
+msgid "Public"
+msgstr "公开"
+
+#: app/templates/my_music.html:33
+msgid "Private"
+msgstr "私人"
+
+#: app/templates/my_music.html:54
+msgid "Search new cover (click multiple times for different options)"
+msgstr "搜索新封面（多次点击可尝试不同选项）"
+
+#: app/templates/my_music.html:100
+msgid "You haven't uploaded any music yet"
+msgstr "您还没有上传任何音乐"
+
+#: app/templates/my_music.html:101
+msgid "Start building your music collection by uploading your first song!"
+msgstr "上传第一首歌曲，开始打造您的音乐收藏！"
+
+#: app/templates/my_music.html:138
+msgid "Cover updated successfully!"
+msgstr "封面更新成功！"
+
+#: app/templates/my_music.html:139
+#, python-format
+msgid "Failed to update cover: %(error)s"
+msgstr "更新封面失败：%(error)s"
+
+#: app/templates/my_music.html:140
+msgid "Failed to update cover. Please try again later."
+msgstr "更新封面失败，请稍后再试。"
+
+#: app/templates/my_music.html:141
+msgid "Unknown error"
+msgstr "未知错误"
+
+#: app/templates/playlist_detail.html:29
+msgid "This playlist is empty."
+msgstr "该播放列表目前为空。"
+
+#: app/templates/playlist_detail.html:29
+msgid "Browse the library"
+msgstr "浏览音乐库"
+
+#: app/templates/playlist_detail.html:29
+msgid "to add songs."
+msgstr "以添加歌曲。"
+
+#: app/templates/playlist_detail.html:34
+msgid "Back to Playlists"
+msgstr "返回播放列表"
+
+#: app/templates/playlists.html:7
+msgid "My Playlists"
+msgstr "我的播放列表"
+
+#: app/templates/playlists.html:23
+msgid "Created:"
+msgstr "创建时间："
+
+#: app/templates/playlists.html:26
+msgid "View Playlist"
+msgstr "查看播放列表"
+
+#: app/templates/playlists.html:34
+msgid "No playlists yet"
+msgstr "暂无播放列表"
+
+#: app/templates/playlists.html:35
+msgid ""
+"You haven't created any playlists. Create your first playlist to organize"
+" your music."
+msgstr "您还没有创建播放列表。创建一个播放列表来整理您的音乐吧。"
+
+#: app/templates/playlists.html:36
+msgid "Create Your First Playlist"
+msgstr "创建您的第一个播放列表"
+
+#: app/templates/search.html:6
+msgid "Search Music"
+msgstr "搜索音乐"
+
+#: app/templates/search.html:10
+msgid "Search for songs, artists, albums, or genres..."
+msgstr "搜索歌曲、艺术家、专辑或流派..."
+
+#: app/templates/search.html:17
+#, python-format
+msgid "Found %(count)s result(s) for \"%(query)s\""
+msgstr "找到 %(count)s 个与“%(query)s”相关的结果"
+
+#: app/templates/search.html:27
+msgid "Genre"
+msgstr "流派"
+
+#: app/templates/search.html:77
+msgid "No results found"
+msgstr "未找到任何结果"
+
+#: app/templates/search.html:78
+#, python-format
+msgid ""
+"No songs found matching \"%(query)s\". Try different keywords or browse "
+"the %(start_link)smusic library%(end_link)s."
+msgstr "没有找到与“%(query)s”匹配的歌曲。请尝试其他关键字，或前往%(start_link)s音乐库%(end_link)s查看。"
+
+#: app/templates/search.html:83
+msgid "Search for music"
+msgstr "搜索音乐"
+
+#: app/templates/search.html:84
+msgid ""
+"Enter a song title, artist name, album, or genre to find music in our "
+"library."
+msgstr "输入歌曲名称、艺术家、专辑或流派，在我们的音乐库中查找音乐。"
+
+#: app/templates/upload.html:16
+msgid "Upload Files"
+msgstr "上传文件"
+
+#: app/templates/upload.html:29 app/templates/upload.html:45
+#: app/templates/upload.html:239
+msgid "No file chosen"
+msgstr "未选择文件"
+
+#: app/templates/upload.html:30
+msgid "Supported formats: MP3, WAV, OGG, FLAC, M4A (max 16MB)"
+msgstr "支持格式：MP3、WAV、OGG、FLAC、M4A（最大 16MB）"
+
+#: app/templates/upload.html:46
+msgid "Optional: JPG, PNG, GIF (album cover art)"
+msgstr "可选：JPG、PNG、GIF（专辑封面）"
+
+#: app/templates/upload.html:58
+msgid ""
+"If no cover image is uploaded, automatically search and download cover "
+"art online"
+msgstr "若未上传封面，将自动在线搜索并下载专辑封面"
+
+#: app/templates/upload.html:65
+msgid "Song Information"
+msgstr "歌曲信息"
+
+#: app/templates/upload.html:73
+msgid "Enter song title"
+msgstr "请输入歌曲标题"
+
+#: app/templates/upload.html:84
+msgid "Enter artist name"
+msgstr "请输入艺术家名称"
+
+#: app/templates/upload.html:98
+msgid "Enter album name (optional)"
+msgstr "请输入专辑名称（可选）"
+
+#: app/templates/upload.html:109
+msgid "Enter genre (optional)"
+msgstr "请输入流派（可选）"
+
+#: app/templates/upload.html:120
+msgid "Visibility Settings"
+msgstr "可见性设置"
+
+#: app/templates/upload.html:131
+msgid ""
+"Choose who can see this song. Public songs are visible to all users, "
+"private songs are only visible to you."
+msgstr "选择谁可以查看此歌曲。公开歌曲对所有用户可见，私人歌曲仅自己可见。"
+
+#: app/templates/upload.html:139
+msgid "Indicates required fields"
+msgstr "表示必填字段"
+
+#: app/templates/upload.html:155
+msgid "Upload Guidelines"
+msgstr "上传指南"
+
+#: app/templates/upload.html:159
+msgid "Ensure you have the rights to upload the music"
+msgstr "确保您拥有上传该音乐的权利"
+
+#: app/templates/upload.html:160
+msgid "Audio files should be good quality (128kbps or higher)"
+msgstr "音频文件需保持良好音质（128kbps 或更高）"
+
+#: app/templates/upload.html:161
+msgid "File size limit: 16MB per file"
+msgstr "单个文件大小限制为 16MB"
+
+#: app/templates/upload.html:166
+msgid "Cover images should be at least 300x300 pixels"
+msgstr "封面图片建议至少 300x300 像素"
+
+#: app/templates/upload.html:167
+msgid "Public songs will be visible to all users"
+msgstr "公开歌曲对所有用户可见"
+
+#: app/templates/upload.html:168
+msgid "Private songs are only visible to you"
+msgstr "私人歌曲仅自己可见"
+
+#: app/templates/upload.html:240
+msgid ""
+"Please fill in all required fields (marked with *): audio file, song "
+"title, and artist name."
+msgstr "请填写所有必填项（标有 *）：音频文件、歌曲标题和艺术家名称。"
+
+#: app/templates/upload.html:241
+msgid ""
+"You have already uploaded a cover image. Do you want to clear the file "
+"and use automatic search?"
+msgstr "您已经上传了封面图片。是否清除该文件并改用自动搜索？"
+
+#: app/templates/user_profile.html:36
+msgid "Website"
+msgstr "网站"
+
+#: app/templates/user_profile.html:45
+msgid "Songs"
+msgstr "歌曲"
+
+#: app/templates/user_profile.html:49
+msgid "Followers"
+msgstr "关注者"
+
+#: app/templates/user_profile.html:53
+msgid "Following"
+msgstr "正在关注"
+
+#: app/templates/user_profile.html:63
+msgid "Unfollow"
+msgstr "取消关注"
+
+#: app/templates/user_profile.html:69
+msgid "Follow"
+msgstr "关注"
+
+#: app/templates/user_profile.html:92
+msgid "Public Songs"
+msgstr "公开歌曲"
+
+#: app/templates/user_profile.html:118
+msgid "View All Songs"
+msgstr "查看全部歌曲"
+
+#: app/templates/user_profile.html:124
+msgid "No public songs yet."
+msgstr "尚无公开歌曲。"
+
+#: app/templates/user_profile.html:132
+msgid "Public Playlists"
+msgstr "公开播放列表"
+
+#: app/templates/user_profile.html:142
+#, python-format
+msgid "%(count)s songs"
+msgstr "%(count)s 首歌曲"
+
+#: app/templates/user_profile.html:151
+msgid "No public playlists yet."
+msgstr "尚无公开播放列表。"
+
+#: app/templates/auth/login.html:6
+msgid "Sign In"
+msgstr "登录"
+
+#: app/templates/auth/login.html:31
+msgid "New User?"
+msgstr "新用户？"
+
+#: app/templates/auth/login.html:31
+msgid "Click to Register!"
+msgstr "点击注册！"
+
+#~ msgid "Username"
+#~ msgstr "用户名"
+
+#~ msgid "Password"
+#~ msgstr "密码"
+
+#~ msgid "Remember Me"
+#~ msgstr "记住我"
+
+#~ msgid "Email"
+#~ msgstr "邮箱"
+
+#~ msgid "Repeat Password"
+#~ msgstr "确认密码"
+
+#~ msgid "Audio File"
+#~ msgstr "音频文件"
+
+#~ msgid "Auto search cover online"
+#~ msgstr "自动在线搜索封面"
+
+#~ msgid "Public - Share with everyone"
+#~ msgstr "公开 - 与所有人分享"
+
+#~ msgid "Post Comment"
+#~ msgstr "发表评论"
+
+#~ msgid "Recently Added"
+#~ msgstr "最近添加"
+
+#~ msgid "Description"
+#~ msgstr "描述"
+
+#~ msgid "Bio"
+#~ msgstr "个人简介"
+
+#~ msgid "Profile Picture"
+#~ msgstr "头像"
+
+#~ msgid "{editor}: Editing failed"
+#~ msgstr ""
+
+#~ msgid "{editor}: Editing failed: {e}"
+#~ msgstr ""
+
+#~ msgid "{text} {deprecated_message}"
+#~ msgstr ""
+
+#~ msgid "Options"
+#~ msgstr "位置"
+
+#~ msgid "Got unexpected extra argument ({args})"
+#~ msgid_plural "Got unexpected extra arguments ({args})"
+#~ msgstr[0] ""
+
+#~ msgid "DeprecationWarning: The command {name!r} is deprecated.{extra_message}"
+#~ msgstr ""
+
+#~ msgid "Aborted!"
+#~ msgstr ""
+
+#~ msgid "Commands"
+#~ msgstr "评论"
+
+#~ msgid "Missing command."
+#~ msgstr ""
+
+#~ msgid "No such command {name!r}."
+#~ msgstr ""
+
+#~ msgid "Value must be an iterable."
+#~ msgstr ""
+
+#~ msgid "Takes {nargs} values but 1 was given."
+#~ msgid_plural "Takes {nargs} values but {len} were given."
+#~ msgstr[0] ""
+
+#~ msgid ""
+#~ "DeprecationWarning: The {param_type} {name!r} "
+#~ "is deprecated.{extra_message}"
+#~ msgstr ""
+
+#~ msgid "env var: {var}"
+#~ msgstr ""
+
+#~ msgid "default: {default}"
+#~ msgstr ""
+
+#~ msgid "required"
+#~ msgstr ""
+
+#~ msgid "(dynamic)"
+#~ msgstr ""
+
+#~ msgid "%(prog)s, version %(version)s"
+#~ msgstr ""
+
+#~ msgid "Show the version and exit."
+#~ msgstr ""
+
+#~ msgid "Show this message and exit."
+#~ msgstr ""
+
+#~ msgid "Error: {message}"
+#~ msgstr ""
+
+#~ msgid "Try '{command} {option}' for help."
+#~ msgstr ""
+
+#~ msgid "Invalid value: {message}"
+#~ msgstr ""
+
+#~ msgid "Invalid value for {param_hint}: {message}"
+#~ msgstr ""
+
+#~ msgid "Missing argument"
+#~ msgstr ""
+
+#~ msgid "Missing option"
+#~ msgstr ""
+
+#~ msgid "Missing parameter"
+#~ msgstr ""
+
+#~ msgid "Missing {param_type}"
+#~ msgstr ""
+
+#~ msgid "Missing parameter: {param_name}"
+#~ msgstr ""
+
+#~ msgid "No such option: {name}"
+#~ msgstr ""
+
+#~ msgid "Did you mean {possibility}?"
+#~ msgid_plural "(Possible options: {possibilities})"
+#~ msgstr[0] ""
+
+#~ msgid "unknown error"
+#~ msgstr ""
+
+#~ msgid "Could not open file {filename!r}: {message}"
+#~ msgstr ""
+
+#~ msgid "Usage:"
+#~ msgstr ""
+
+#~ msgid "Argument {name!r} takes {nargs} values."
+#~ msgstr ""
+
+#~ msgid "Option {name!r} does not take a value."
+#~ msgstr ""
+
+#~ msgid "Option {name!r} requires an argument."
+#~ msgid_plural "Option {name!r} requires {nargs} arguments."
+#~ msgstr[0] ""
+
+#~ msgid "Shell completion is not supported for Bash versions older than 4.4."
+#~ msgstr ""
+
+#~ msgid "Couldn't detect Bash version, shell completion is not supported."
+#~ msgstr ""
+
+#~ msgid "Repeat for confirmation"
+#~ msgstr ""
+
+#~ msgid "Error: The value you entered was invalid."
+#~ msgstr ""
+
+#~ msgid "Error: {e.message}"
+#~ msgstr ""
+
+#~ msgid "Error: The two entered values do not match."
+#~ msgstr ""
+
+#~ msgid "Error: invalid input"
+#~ msgstr ""
+
+#~ msgid "Press any key to continue..."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Choose from:\n"
+#~ "\t{choices}"
+#~ msgstr ""
+
+#~ msgid "{value!r} is not {choice}."
+#~ msgid_plural "{value!r} is not one of {choices}."
+#~ msgstr[0] ""
+
+#~ msgid "{value!r} does not match the format {format}."
+#~ msgid_plural "{value!r} does not match the formats {formats}."
+#~ msgstr[0] ""
+
+#~ msgid "{value!r} is not a valid {number_type}."
+#~ msgstr ""
+
+#~ msgid "{value} is not in the range {range}."
+#~ msgstr ""
+
+#~ msgid "{value!r} is not a valid boolean. Recognized values: {states}"
+#~ msgstr ""
+
+#~ msgid "{value!r} is not a valid UUID."
+#~ msgstr ""
+
+#~ msgid "file"
+#~ msgstr "个人资料"
+
+#~ msgid "directory"
+#~ msgstr ""
+
+#~ msgid "path"
+#~ msgstr ""
+
+#~ msgid "{name} {filename!r} does not exist."
+#~ msgstr ""
+
+#~ msgid "{name} {filename!r} is a file."
+#~ msgstr ""
+
+#~ msgid "{name} {filename!r} is a directory."
+#~ msgstr ""
+
+#~ msgid "{name} {filename!r} is not readable."
+#~ msgstr ""
+
+#~ msgid "{name} {filename!r} is not writable."
+#~ msgstr ""
+
+#~ msgid "{name} {filename!r} is not executable."
+#~ msgstr ""
+
+#~ msgid "{len_type} values are required, but {len_value} was given."
+#~ msgid_plural "{len_type} values are required, but {len_value} were given."
+#~ msgstr[0] ""
+
+#~ msgid "This field is required."
+#~ msgstr ""
+
+#~ msgid "File does not have an approved extension: {extensions}"
+#~ msgstr ""
+
+#~ msgid "File does not have an approved extension."
+#~ msgstr ""
+
+#~ msgid "File must be between {min_size} and {max_size} bytes."
+#~ msgstr ""
+
+#~ msgid "Invalid field name '%s'."
+#~ msgstr ""
+
+#~ msgid "Field must be equal to %(other_name)s."
+#~ msgstr ""
+
+#~ msgid "Field must be at least %(min)d character long."
+#~ msgid_plural "Field must be at least %(min)d characters long."
+#~ msgstr[0] ""
+
+#~ msgid "Field cannot be longer than %(max)d character."
+#~ msgid_plural "Field cannot be longer than %(max)d characters."
+#~ msgstr[0] ""
+
+#~ msgid "Field must be exactly %(max)d character long."
+#~ msgid_plural "Field must be exactly %(max)d characters long."
+#~ msgstr[0] ""
+
+#~ msgid "Field must be between %(min)d and %(max)d characters long."
+#~ msgstr ""
+
+#~ msgid "Number must be at least %(min)s."
+#~ msgstr ""
+
+#~ msgid "Number must be at most %(max)s."
+#~ msgstr ""
+
+#~ msgid "Number must be between %(min)s and %(max)s."
+#~ msgstr ""
+
+#~ msgid "Invalid input."
+#~ msgstr ""
+
+#~ msgid "Invalid email address."
+#~ msgstr ""
+
+#~ msgid "Invalid IP address."
+#~ msgstr ""
+
+#~ msgid "Invalid Mac address."
+#~ msgstr ""
+
+#~ msgid "Invalid URL."
+#~ msgstr ""
+
+#~ msgid "Invalid UUID."
+#~ msgstr ""
+
+#~ msgid "Invalid value, must be one of: %(values)s."
+#~ msgstr ""
+
+#~ msgid "Invalid value, can't be any of: %(values)s."
+#~ msgstr ""
+
+#~ msgid "Invalid CSRF Token."
+#~ msgstr ""
+
+#~ msgid "CSRF token missing."
+#~ msgstr ""
+
+#~ msgid "CSRF failed."
+#~ msgstr ""
+
+#~ msgid "CSRF token expired."
+#~ msgstr ""
+
+#~ msgid "Invalid Choice: could not coerce."
+#~ msgstr ""
+
+#~ msgid "Choices cannot be None."
+#~ msgstr ""
+
+#~ msgid "Not a valid choice."
+#~ msgstr ""
+
+#~ msgid "Invalid choice(s): one or more data inputs could not be coerced."
+#~ msgstr ""
+
+#~ msgid "'%(value)s' is not a valid choice for this field."
+#~ msgid_plural "'%(value)s' are not valid choices for this field."
+#~ msgstr[0] ""
+
+#~ msgid "Not a valid datetime value."
+#~ msgstr ""
+
+#~ msgid "Not a valid date value."
+#~ msgstr ""
+
+#~ msgid "Not a valid time value."
+#~ msgstr ""
+
+#~ msgid "Not a valid integer value."
+#~ msgstr ""
+
+#~ msgid "Not a valid decimal value."
+#~ msgstr ""
+
+#~ msgid "Not a valid float value."
+#~ msgstr ""
+

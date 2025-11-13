@@ -1,0 +1,602 @@
+# Translations template for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-11-13 23:48+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: app/routes.py:195
+msgid "Please select an audio file."
+msgstr ""
+
+#: app/routes.py:199
+msgid "Please select a valid audio file (MP3, WAV, OGG, FLAC, M4A)."
+msgstr ""
+
+#: app/routes.py:233
+msgid "Invalid image file type. Please use JPG, PNG, or GIF."
+msgstr ""
+
+#: app/routes.py:244 app/routes.py:395
+msgid "NetEase Cloud Music"
+msgstr ""
+
+#: app/routes.py:249 app/routes.py:400
+msgid "QQ Music"
+msgstr ""
+
+#: app/routes.py:262 app/routes.py:413
+msgid "Apple Music"
+msgstr ""
+
+#: app/routes.py:269
+#, python-format
+msgid "🎨 Found and downloaded album cover from %(source)s!"
+msgstr ""
+
+#: app/routes.py:271
+msgid "Cover download failed, please try again later."
+msgstr ""
+
+#: app/routes.py:273
+msgid "No album cover was found for this song."
+msgstr ""
+
+#: app/routes.py:276
+#, python-format
+msgid "Error occurred while searching for cover: %(error)s"
+msgstr ""
+
+#: app/routes.py:293
+msgid "publicly shared"
+msgstr ""
+
+#: app/routes.py:293
+msgid "privately saved"
+msgstr ""
+
+#: app/routes.py:294
+#, python-format
+msgid "🎵 Your song has been uploaded successfully and is %(status)s!"
+msgstr ""
+
+#: app/routes.py:305
+#, python-format
+msgid "Error uploading file: %(error)s"
+msgstr ""
+
+#: app/routes.py:348
+msgid "Your playlist has been created!"
+msgstr ""
+
+#: app/routes.py:614
+msgid "Your profile has been updated!"
+msgstr ""
+
+#: app/routes.py:631
+msgid "You cannot follow yourself!"
+msgstr ""
+
+#: app/routes.py:636
+#, python-format
+msgid "You are now following %(username)s!"
+msgstr ""
+
+#: app/routes.py:646
+#, python-format
+msgid "You have unfollowed %(username)s."
+msgstr ""
+
+#: app/routes.py:662
+msgid "You can only delete your own songs."
+msgstr ""
+
+#: app/routes.py:681
+msgid "Song deleted successfully!"
+msgstr ""
+
+#: app/routes.py:685
+#, python-format
+msgid "Error deleting song: %(error)s"
+msgstr ""
+
+#: app/templates/base.html:80 app/templates/base.html:183
+msgid "▶️ Play"
+msgstr ""
+
+#: app/templates/base.html:80 app/templates/base.html:184
+msgid "⏸️ Pause"
+msgstr ""
+
+#: app/templates/base.html:91
+msgid "Home"
+msgstr ""
+
+#: app/templates/base.html:94
+msgid "Library"
+msgstr ""
+
+#: app/templates/base.html:98
+msgid "Upload"
+msgstr ""
+
+#: app/templates/base.html:101 app/templates/my_music.html:7
+msgid "My Music"
+msgstr ""
+
+#: app/templates/base.html:104
+msgid "Playlists"
+msgstr ""
+
+#: app/templates/base.html:108
+msgid "Profile"
+msgstr ""
+
+#: app/templates/base.html:116
+msgid "Search music..."
+msgstr ""
+
+#: app/templates/base.html:117 app/templates/search.html:11
+msgid "Search"
+msgstr ""
+
+#: app/templates/base.html:123
+msgid "Language"
+msgstr ""
+
+#: app/templates/base.html:135
+#, python-format
+msgid "Hello, %(username)s"
+msgstr ""
+
+#: app/templates/base.html:139
+msgid "Logout"
+msgstr ""
+
+#: app/templates/base.html:143
+msgid "Login"
+msgstr ""
+
+#: app/templates/auth/register.html:6 app/templates/base.html:146
+msgid "Register"
+msgstr ""
+
+#: app/templates/base.html:174
+msgid "Your browser does not support the audio element."
+msgstr ""
+
+#: app/templates/base.html:185
+msgid "Now Playing:"
+msgstr ""
+
+#: app/templates/base.html:186
+msgid "Album:"
+msgstr ""
+
+#: app/templates/base.html:187
+msgid "Audio playback error. Please check the file format."
+msgstr ""
+
+#: app/templates/base.html:188
+#, python-format
+msgid "Error playing song: %(error)s"
+msgstr ""
+
+#: app/templates/base.html:189
+#, python-format
+msgid "Unable to play audio: %(error)s"
+msgstr ""
+
+#: app/templates/create_playlist.html:6 app/templates/playlists.html:8
+msgid "Create New Playlist"
+msgstr ""
+
+#: app/templates/create_playlist.html:25 app/templates/edit_profile.html:52
+#: app/templates/upload.html:146
+msgid "Cancel"
+msgstr ""
+
+#: app/templates/edit_profile.html:8 app/templates/user_profile.html:80
+msgid "Edit Profile"
+msgstr ""
+
+#: app/templates/edit_profile.html:20
+msgid "Tell others about yourself (max 500 characters)"
+msgstr ""
+
+#: app/templates/edit_profile.html:37
+msgid "Your personal website or social media link"
+msgstr ""
+
+#: app/templates/edit_profile.html:46
+msgid "Recommended: Square image, JPG or PNG"
+msgstr ""
+
+#: app/templates/index.html:6
+msgid "Latest Uploads"
+msgstr ""
+
+#: app/templates/index.html:15 app/templates/library.html:32
+#: app/templates/my_music.html:42 app/templates/playlist_detail.html:21
+#: app/templates/search.html:32 app/templates/user_profile.html:106
+msgid "Play"
+msgstr ""
+
+#: app/templates/index.html:20 app/templates/index.html:43
+#: app/templates/index.html:58 app/templates/library.html:37
+#: app/templates/library.html:102 app/templates/library.html:117
+#: app/templates/my_music.html:47 app/templates/my_music.html:113
+#: app/templates/my_music.html:128 app/templates/search.html:37
+#: app/templates/search.html:95 app/templates/search.html:110
+msgid "Add to Playlist"
+msgstr ""
+
+#: app/templates/index.html:30
+msgid "Welcome to MusicStream"
+msgstr ""
+
+#: app/templates/index.html:31
+msgid "Your personal online music streaming platform."
+msgstr ""
+
+#: app/templates/index.html:33
+msgid "Join Now"
+msgstr ""
+
+#: app/templates/index.html:50 app/templates/library.html:109
+#: app/templates/my_music.html:120 app/templates/search.html:102
+msgid "Select Playlist"
+msgstr ""
+
+#: app/templates/index.html:52 app/templates/library.html:111
+#: app/templates/my_music.html:122 app/templates/search.html:104
+msgid "Choose a playlist..."
+msgstr ""
+
+#: app/templates/library.html:6
+msgid "Music Library"
+msgstr ""
+
+#: app/templates/library.html:17 app/templates/my_music.html:20
+msgid "No Cover"
+msgstr ""
+
+#: app/templates/library.html:23 app/templates/my_music.html:26
+#: app/templates/search.html:25
+msgid "Artist"
+msgstr ""
+
+#: app/templates/library.html:24 app/templates/my_music.html:27
+#: app/templates/search.html:26
+msgid "Album"
+msgstr ""
+
+#: app/templates/library.html:25
+msgid "By"
+msgstr ""
+
+#: app/templates/library.html:44 app/templates/my_music.html:59
+msgid "Are you sure you want to delete this song?"
+msgstr ""
+
+#: app/templates/library.html:62 app/templates/my_music.html:77
+#: app/templates/search.html:52
+msgid "Previous"
+msgstr ""
+
+#: app/templates/library.html:78 app/templates/my_music.html:93
+#: app/templates/search.html:68
+msgid "Next"
+msgstr ""
+
+#: app/templates/library.html:85
+msgid "No songs available yet"
+msgstr ""
+
+#: app/templates/library.html:86
+msgid "The music library is empty. Be the first to upload a song!"
+msgstr ""
+
+#: app/templates/library.html:88 app/templates/my_music.html:102
+msgid "Upload Your First Song"
+msgstr ""
+
+#: app/templates/library.html:90
+msgid "Register to Upload Songs"
+msgstr ""
+
+#: app/templates/my_music.html:8 app/templates/upload.html:8
+msgid "Upload New Song"
+msgstr ""
+
+#: app/templates/my_music.html:28
+msgid "Visibility"
+msgstr ""
+
+#: app/templates/my_music.html:31
+msgid "Public"
+msgstr ""
+
+#: app/templates/my_music.html:33
+msgid "Private"
+msgstr ""
+
+#: app/templates/my_music.html:54
+msgid "Search new cover (click multiple times for different options)"
+msgstr ""
+
+#: app/templates/my_music.html:100
+msgid "You haven't uploaded any music yet"
+msgstr ""
+
+#: app/templates/my_music.html:101
+msgid "Start building your music collection by uploading your first song!"
+msgstr ""
+
+#: app/templates/my_music.html:138
+msgid "Cover updated successfully!"
+msgstr ""
+
+#: app/templates/my_music.html:139
+#, python-format
+msgid "Failed to update cover: %(error)s"
+msgstr ""
+
+#: app/templates/my_music.html:140
+msgid "Failed to update cover. Please try again later."
+msgstr ""
+
+#: app/templates/my_music.html:141
+msgid "Unknown error"
+msgstr ""
+
+#: app/templates/playlist_detail.html:29
+msgid "This playlist is empty."
+msgstr ""
+
+#: app/templates/playlist_detail.html:29
+msgid "Browse the library"
+msgstr ""
+
+#: app/templates/playlist_detail.html:29
+msgid "to add songs."
+msgstr ""
+
+#: app/templates/playlist_detail.html:34
+msgid "Back to Playlists"
+msgstr ""
+
+#: app/templates/playlists.html:7
+msgid "My Playlists"
+msgstr ""
+
+#: app/templates/playlists.html:23
+msgid "Created:"
+msgstr ""
+
+#: app/templates/playlists.html:26
+msgid "View Playlist"
+msgstr ""
+
+#: app/templates/playlists.html:34
+msgid "No playlists yet"
+msgstr ""
+
+#: app/templates/playlists.html:35
+msgid ""
+"You haven't created any playlists. Create your first playlist to organize"
+" your music."
+msgstr ""
+
+#: app/templates/playlists.html:36
+msgid "Create Your First Playlist"
+msgstr ""
+
+#: app/templates/search.html:6
+msgid "Search Music"
+msgstr ""
+
+#: app/templates/search.html:10
+msgid "Search for songs, artists, albums, or genres..."
+msgstr ""
+
+#: app/templates/search.html:17
+#, python-format
+msgid "Found %(count)s result(s) for \"%(query)s\""
+msgstr ""
+
+#: app/templates/search.html:27
+msgid "Genre"
+msgstr ""
+
+#: app/templates/search.html:77
+msgid "No results found"
+msgstr ""
+
+#: app/templates/search.html:78
+#, python-format
+msgid ""
+"No songs found matching \"%(query)s\". Try different keywords or browse "
+"the %(start_link)smusic library%(end_link)s."
+msgstr ""
+
+#: app/templates/search.html:83
+msgid "Search for music"
+msgstr ""
+
+#: app/templates/search.html:84
+msgid ""
+"Enter a song title, artist name, album, or genre to find music in our "
+"library."
+msgstr ""
+
+#: app/templates/upload.html:16
+msgid "Upload Files"
+msgstr ""
+
+#: app/templates/upload.html:29 app/templates/upload.html:45
+#: app/templates/upload.html:239
+msgid "No file chosen"
+msgstr ""
+
+#: app/templates/upload.html:30
+msgid "Supported formats: MP3, WAV, OGG, FLAC, M4A (max 16MB)"
+msgstr ""
+
+#: app/templates/upload.html:46
+msgid "Optional: JPG, PNG, GIF (album cover art)"
+msgstr ""
+
+#: app/templates/upload.html:58
+msgid ""
+"If no cover image is uploaded, automatically search and download cover "
+"art online"
+msgstr ""
+
+#: app/templates/upload.html:65
+msgid "Song Information"
+msgstr ""
+
+#: app/templates/upload.html:73
+msgid "Enter song title"
+msgstr ""
+
+#: app/templates/upload.html:84
+msgid "Enter artist name"
+msgstr ""
+
+#: app/templates/upload.html:98
+msgid "Enter album name (optional)"
+msgstr ""
+
+#: app/templates/upload.html:109
+msgid "Enter genre (optional)"
+msgstr ""
+
+#: app/templates/upload.html:120
+msgid "Visibility Settings"
+msgstr ""
+
+#: app/templates/upload.html:131
+msgid ""
+"Choose who can see this song. Public songs are visible to all users, "
+"private songs are only visible to you."
+msgstr ""
+
+#: app/templates/upload.html:139
+msgid "Indicates required fields"
+msgstr ""
+
+#: app/templates/upload.html:155
+msgid "Upload Guidelines"
+msgstr ""
+
+#: app/templates/upload.html:159
+msgid "Ensure you have the rights to upload the music"
+msgstr ""
+
+#: app/templates/upload.html:160
+msgid "Audio files should be good quality (128kbps or higher)"
+msgstr ""
+
+#: app/templates/upload.html:161
+msgid "File size limit: 16MB per file"
+msgstr ""
+
+#: app/templates/upload.html:166
+msgid "Cover images should be at least 300x300 pixels"
+msgstr ""
+
+#: app/templates/upload.html:167
+msgid "Public songs will be visible to all users"
+msgstr ""
+
+#: app/templates/upload.html:168
+msgid "Private songs are only visible to you"
+msgstr ""
+
+#: app/templates/upload.html:240
+msgid ""
+"Please fill in all required fields (marked with *): audio file, song "
+"title, and artist name."
+msgstr ""
+
+#: app/templates/upload.html:241
+msgid ""
+"You have already uploaded a cover image. Do you want to clear the file "
+"and use automatic search?"
+msgstr ""
+
+#: app/templates/user_profile.html:36
+msgid "Website"
+msgstr ""
+
+#: app/templates/user_profile.html:45
+msgid "Songs"
+msgstr ""
+
+#: app/templates/user_profile.html:49
+msgid "Followers"
+msgstr ""
+
+#: app/templates/user_profile.html:53
+msgid "Following"
+msgstr ""
+
+#: app/templates/user_profile.html:63
+msgid "Unfollow"
+msgstr ""
+
+#: app/templates/user_profile.html:69
+msgid "Follow"
+msgstr ""
+
+#: app/templates/user_profile.html:92
+msgid "Public Songs"
+msgstr ""
+
+#: app/templates/user_profile.html:118
+msgid "View All Songs"
+msgstr ""
+
+#: app/templates/user_profile.html:124
+msgid "No public songs yet."
+msgstr ""
+
+#: app/templates/user_profile.html:132
+msgid "Public Playlists"
+msgstr ""
+
+#: app/templates/user_profile.html:142
+#, python-format
+msgid "%(count)s songs"
+msgstr ""
+
+#: app/templates/user_profile.html:151
+msgid "No public playlists yet."
+msgstr ""
+
+#: app/templates/auth/login.html:6
+msgid "Sign In"
+msgstr ""
+
+#: app/templates/auth/login.html:31
+msgid "New User?"
+msgstr ""
+
+#: app/templates/auth/login.html:31
+msgid "Click to Register!"
+msgstr ""
+

@@ -21,3 +21,8 @@ class Config:
     # 允许的文件扩展名
     ALLOWED_AUDIO_EXTENSIONS = {'mp3', 'wav', 'ogg', 'flac', 'm4a'}
     ALLOWED_IMAGE_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
+    
+    # 国际化配置
+    LANGUAGES = ['en', 'zh']
+    BABEL_DEFAULT_LOCALE = 'en'
+    BABEL_DEFAULT_TIMEZONE = 'UTC'

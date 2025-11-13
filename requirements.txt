@@ -7,3 +7,5 @@ WTForms==3.0.1
 Werkzeug==2.3.7
 Pillow==10.0.1
 python-dotenv==1.0.0
+requests==2.31.0
+Flask-Babel==3.1.0

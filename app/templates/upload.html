@@ -5,79 +5,145 @@
     <div class="col-md-8">
         <div class="card">
             <div class="card-header">
-                <h2 class="card-title mb-0">Upload New Song</h2>
+                <h2 class="card-title mb-0">{{ _('Upload New Song') }}</h2>
             </div>
             <div class="card-body">
                 <form action="" method="post" enctype="multipart/form-data" novalidate>
                     {{ form.hidden_tag() }}
                     
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                {{ form.title.label(class="form-label") }}
-                                {{ form.title(class="form-control") }}
-                                {% for error in form.title.errors %}
-                                <div class="text-danger">{{ error }}</div>
-                                {% endfor %}
+                    <!-- 文件上传部分 - 放在上面 -->
+                    <div class="mb-4">
+                        <h5 class="text-primary mb-3">📁 {{ _('Upload Files') }}</h5>
+                        
+                        <div class="mb-3">
+                            <label for="audio_file" class="form-label fw-bold required">
+                                {{ form.audio_file.label.text }}
+                            </label>
+                            <div class="input-group">
+                                {{ form.audio_file(class="form-control", id="audio_file") }}
+                            </div>
+                            {% for error in form.audio_file.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                            <div class="form-text">
+                                <span id="audio-file-name" class="text-muted" data-default-text="{{ _('No file chosen') }}">{{ _('No file chosen') }}</span> • 
+                                {{ _('Supported formats: MP3, WAV, OGG, FLAC, M4A (max 16MB)') }}
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                {{ form.artist.label(class="form-label") }}
-                                {{ form.artist(class="form-control") }}
-                                {% for error in form.artist.errors %}
-                                <div class="text-danger">{{ error }}</div>
-                                {% endfor %}
+                        
+                        <div class="mb-3">
+                            <label for="cover_image" class="form-label fw-bold">
+                                {{ form.cover_image.label.text }}
+                            </label>
+                            <div class="input-group">
+                                {{ form.cover_image(class="form-control", id="cover_image") }}
+                            </div>
+                            {% for error in form.cover_image.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                            <div class="form-text">
+                                <span id="cover-file-name" class="text-muted" data-default-text="{{ _('No file chosen') }}">{{ _('No file chosen') }}</span> • 
+                                {{ _('Optional: JPG, PNG, GIF (album cover art)') }}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.auto_search_cover(class="form-check-input", id="auto_search_cover") }}
+                                <label class="form-check-label" for="auto_search_cover">
+                                    {{ form.auto_search_cover.label.text }}
+                                </label>
+                            </div>
+                            <div class="form-text">
+                                {{ _('If no cover image is uploaded, automatically search and download cover art online') }}
                             </div>
                         </div>
                     </div>
                     
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                {{ form.album.label(class="form-label") }}
-                                {{ form.album(class="form-control") }}
-                                {% for error in form.album.errors %}
-                                <div class="text-danger">{{ error }}</div>
-                                {% endfor %}
+                    <!-- 歌曲信息部分 - 放在中间 -->
+                    <div class="mb-4">
+                        <h5 class="text-primary mb-3">🎵 {{ _('Song Information') }}</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="title" class="form-label fw-bold required">
+                                        {{ form.title.label.text }}
+                                    </label>
+                                    {{ form.title(class="form-control", placeholder=_('Enter song title'), id="title") }}
+                                    {% for error in form.title.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="artist" class="form-label fw-bold required">
+                                        {{ form.artist.label.text }}
+                                    </label>
+                                    {{ form.artist(class="form-control", placeholder=_('Enter artist name'), id="artist") }}
+                                    {% for error in form.artist.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                {{ form.genre.label(class="form-label") }}
-                                {{ form.genre(class="form-control") }}
-                                {% for error in form.genre.errors %}
-                                <div class="text-danger">{{ error }}</div>
-                                {% endfor %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="album" class="form-label">
+                                        {{ form.album.label.text }}
+                                    </label>
+                                    {{ form.album(class="form-control", placeholder=_('Enter album name (optional)')) }}
+                                    {% for error in form.album.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="genre" class="form-label">
+                                        {{ form.genre.label.text }}
+                                    </label>
+                                    {{ form.genre(class="form-control", placeholder=_('Enter genre (optional)')) }}
+                                    {% for error in form.genre.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
                             </div>
                         </div>
                     </div>
                     
+                    <!-- 可见性设置 - 放在下面 -->
+                    <div class="mb-4">
+                        <h5 class="text-primary mb-3">👁️ {{ _('Visibility Settings') }}</h5>
+                        
+                        <div class="mb-3">
+                            <label for="visibility" class="form-label fw-bold">
+                                {{ form.visibility.label.text }}
+                            </label>
+                            {{ form.visibility(class="form-select") }}
+                            {% for error in form.visibility.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                            <div class="form-text">
+                                {{ _('Choose who can see this song. Public songs are visible to all users, private songs are only visible to you.') }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 必填字段说明 -->
+                    <div class="alert alert-light border mb-4">
+                        <small class="text-muted">
+                            <span class="text-danger">*</span> {{ _('Indicates required fields') }}
+                        </small>
+                    </div>
+                    
+                    <!-- 提交按钮 -->
                     <div class="mb-3">
-                        {{ form.audio_file.label(class="form-label") }}
-                        {{ form.audio_file(class="form-control") }}
-                        {% for error in form.audio_file.errors %}
-                        <div class="text-danger">{{ error }}</div>
-                        {% endfor %}
-                        <div class="form-text">
-                            Supported formats: MP3, WAV, OGG, FLAC, M4A (max 16MB)
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        {{ form.cover_image.label(class="form-label") }}
-                        {{ form.cover_image(class="form-control") }}
-                        {% for error in form.cover_image.errors %}
-                        <div class="text-danger">{{ error }}</div>
-                        {% endfor %}
-                        <div class="form-text">
-                            Optional: JPG, PNG, GIF (album cover art)
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        {{ form.submit(class="btn btn-primary btn-lg") }}
-                        <a href="{{ url_for('main.library') }}" class="btn btn-secondary">Cancel</a>
+                        {{ form.submit(class="btn btn-primary btn-lg w-100", id="submit-btn") }}
+                        <a href="{{ url_for('main.library') }}" class="btn btn-secondary w-100 mt-2">{{ _('Cancel') }}</a>
                     </div>
                 </form>
             </div>
@@ -86,15 +152,171 @@
         <!-- Upload Guidelines -->
         <div class="card mt-4">
             <div class="card-body">
-                <h5>Upload Guidelines</h5>
-                <ul class="mb-0">
-                    <li>Ensure you have the rights to upload the music</li>
-                    <li>Audio files should be good quality (128kbps or higher)</li>
-                    <li>Cover images should be at least 300x300 pixels</li>
-                    <li>File size limit: 16MB per file</li>
-                </ul>
+                <h5 class="text-primary">📋 {{ _('Upload Guidelines') }}</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="mb-0">
+                            <li>{{ _('Ensure you have the rights to upload the music') }}</li>
+                            <li>{{ _('Audio files should be good quality (128kbps or higher)') }}</li>
+                            <li>{{ _('File size limit: 16MB per file') }}</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="mb-0">
+                            <li>{{ _('Cover images should be at least 300x300 pixels') }}</li>
+                            <li>{{ _('Public songs will be visible to all users') }}</li>
+                            <li>{{ _('Private songs are only visible to you') }}</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+.form-label.fw-bold {
+    color: #495057;
+}
+.text-primary {
+    color: #1db954 !important;
+}
+.card {
+    border: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.card-header {
+    background-color: #1db954;
+    color: white;
+    border-bottom: none;
+}
+.btn-primary {
+    background-color: #1db954;
+    border-color: #1db954;
+}
+.btn-primary:hover {
+    background-color: #1ed760;
+    border-color: #1ed760;
+}
+/* 禁用按钮样式 */
+.btn:disabled {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    cursor: not-allowed;
+}
+/* 文件选择反馈 */
+.file-name {
+    font-weight: 500;
+}
+.file-name.has-file {
+    color: #198754;
+}
+/* 必填字段星号样式 */
+.required::after {
+    content: " *";
+    color: #dc3545;
+    font-weight: bold;
+}
+/* 必填字段说明 */
+.alert-light {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const audioFileInput = document.getElementById('audio_file');
+    const titleInput = document.getElementById('title');
+    const artistInput = document.getElementById('artist');
+    const submitBtn = document.getElementById('submit-btn');
+    const audioFileName = document.getElementById('audio-file-name');
+    const coverFileName = document.getElementById('cover-file-name');
+    const coverImageInput = document.getElementById('cover_image');
+    const autoSearchCover = document.getElementById('auto_search_cover');
+    const uploadMessages = {{ {
+        "no_file_chosen": _('No file chosen'),
+        "fill_required": _('Please fill in all required fields (marked with *): audio file, song title, and artist name.'),
+        "confirm_use_auto": _('You have already uploaded a cover image. Do you want to clear the file and use automatic search?')
+    }|tojson }};
+    
+    // 实时验证函数
+    function validateForm() {
+        const audioFile = audioFileInput.files[0];
+        const title = titleInput.value.trim();
+        const artist = artistInput.value.trim();
+        
+        // 检查必填字段
+        const isValid = audioFile && title && artist;
+        
+        // 更新提交按钮状态
+        if (isValid) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('btn-secondary');
+            submitBtn.classList.add('btn-primary');
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.classList.remove('btn-primary');
+            submitBtn.classList.add('btn-secondary');
+        }
+        
+        return isValid;
+    }
+    
+    // 更新文件名显示
+    function updateFileNameDisplay(inputElement, displayElement) {
+        if (inputElement.files[0]) {
+            displayElement.textContent = inputElement.files[0].name;
+            displayElement.classList.add('file-name', 'has-file');
+        } else {
+            displayElement.textContent = displayElement.dataset.defaultText || uploadMessages.no_file_chosen;
+            displayElement.classList.remove('file-name', 'has-file');
+        }
+    }
+    
+    // 添加输入监听事件
+    audioFileInput.addEventListener('change', function() {
+        updateFileNameDisplay(audioFileInput, audioFileName);
+        validateForm();
+    });
+    
+    coverImageInput.addEventListener('change', function() {
+        updateFileNameDisplay(this, coverFileName);
+        // 如果用户上传了封面，自动取消自动搜索
+        if (this.files[0]) {
+            autoSearchCover.checked = false;
+        }
+    });
+    
+    // 自动搜索封面复选框事件
+    autoSearchCover.addEventListener('change', function() {
+        if (this.checked && coverImageInput.files[0]) {
+            // 如果勾选了自动搜索但已经有上传文件，提示用户
+            if (confirm(uploadMessages.confirm_use_auto)) {
+                coverImageInput.value = '';
+                updateFileNameDisplay(coverImageInput, coverFileName);
+            } else {
+                this.checked = false;
+            }
+        }
+    });
+    
+    titleInput.addEventListener('input', validateForm);
+    artistInput.addEventListener('input', validateForm);
+    
+    // 初始验证和文件名显示
+    updateFileNameDisplay(audioFileInput, audioFileName);
+    updateFileNameDisplay(coverImageInput, coverFileName);
+    validateForm();
+    
+    // 表单提交前的最终验证
+    form.addEventListener('submit', function(e) {
+        if (!validateForm()) {
+            e.preventDefault();
+            alert(uploadMessages.fill_required);
+        }
+    });
+});
+</script>
 {% endblock %}

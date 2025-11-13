@@ -18,7 +18,7 @@
                 </div>
                 <div>
                     <button class="btn btn-primary btn-sm play-btn" data-song-id="{{ item.song.id }}">
-                        Play
+                        {{ _('Play') }}
                     </button>
                 </div>
             </div>
@@ -26,12 +26,12 @@
         </div>
         {% else %}
         <div class="alert alert-info">
-            This playlist is empty. <a href="{{ url_for('main.library') }}">Browse the library</a> to add songs.
+            {{ _('This playlist is empty.') }} <a href="{{ url_for('main.library') }}">{{ _('Browse the library') }}</a> {{ _('to add songs.') }}
         </div>
         {% endif %}
         
         <div class="mt-3">
-            <a href="{{ url_for('main.playlists') }}" class="btn btn-secondary">Back to Playlists</a>
+            <a href="{{ url_for('main.playlists') }}" class="btn btn-secondary">{{ _('Back to Playlists') }}</a>
         </div>
     </div>
 </div>

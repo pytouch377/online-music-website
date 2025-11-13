@@ -3,18 +3,18 @@
 {% block content %}
 <div class="row">
     <div class="col-12">
-        <h2>Search Music</h2>
+        <h2>{{ _('Search Music') }}</h2>
         
         <form action="{{ url_for('main.search') }}" method="get" class="mb-4">
             <div class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="Search for songs, artists, albums, or genres..." value="{{ query }}">
-                <button class="btn btn-primary" type="submit">Search</button>
+                <input type="text" name="q" class="form-control" placeholder="{{ _('Search for songs, artists, albums, or genres...') }}" value="{{ query }}">
+                <button class="btn btn-primary" type="submit">{{ _('Search') }}</button>
             </div>
         </form>
 
         {% if query %}
             {% if songs and songs.items %}
-            <p class="text-muted">Found {{ songs.total }} result(s) for "{{ query }}"</p>
+            <p class="text-muted">{{ _('Found %(count)s result(s) for "%(query)s"', count=songs.total, query=query) }}</p>
             <div class="row">
                 {% for song in songs.items %}
                 <div class="col-md-4 mb-4">
@@ -22,19 +22,19 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ song.title }}</h5>
                             <p class="card-text">
-                                <strong>Artist:</strong> {{ song.artist }}<br>
-                                {% if song.album %}<strong>Album:</strong> {{ song.album }}<br>{% endif %}
-                                {% if song.genre %}<strong>Genre:</strong> {{ song.genre }}{% endif %}
+                                <strong>{{ _('Artist') }}:</strong> {{ song.artist }}<br>
+                                {% if song.album %}<strong>{{ _('Album') }}:</strong> {{ song.album }}<br>{% endif %}
+                                {% if song.genre %}<strong>{{ _('Genre') }}:</strong> {{ song.genre }}{% endif %}
                             </p>
                         </div>
                         <div class="card-footer">
                             <button class="btn btn-primary btn-sm play-btn" data-song-id="{{ song.id }}">
-                                Play
+                                {{ _('Play') }}
                             </button>
                             {% if current_user.is_authenticated %}
                             <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" 
                                     data-bs-target="#addToPlaylistModal" data-song-id="{{ song.id }}">
-                                Add to Playlist
+                                {{ _('Add to Playlist') }}
                             </button>
                             {% endif %}
                         </div>
@@ -49,7 +49,7 @@
                 <ul class="pagination justify-content-center">
                     {% if songs.has_prev %}
                     <li class="page-item">
-                        <a class="page-link" href="{{ url_for('main.search', q=query, page=songs.prev_num) }}">Previous</a>
+                        <a class="page-link" href="{{ url_for('main.search', q=query, page=songs.prev_num) }}">{{ _('Previous') }}</a>
                     </li>
                     {% endif %}
                     
@@ -65,7 +65,7 @@
                     
                     {% if songs.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="{{ url_for('main.search', q=query, page=songs.next_num) }}">Next</a>
+                        <a class="page-link" href="{{ url_for('main.search', q=query, page=songs.next_num) }}">{{ _('Next') }}</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -74,14 +74,14 @@
 
             {% else %}
             <div class="alert alert-info">
-                <h5>No results found</h5>
-                <p>No songs found matching "{{ query }}". Try different keywords or browse the <a href="{{ url_for('main.library') }}">music library</a>.</p>
+                <h5>{{ _('No results found') }}</h5>
+                <p>{{ _('No songs found matching "%(query)s". Try different keywords or browse the %(start_link)smusic library%(end_link)s.', query=query, start_link='<a href="' ~ url_for('main.library') ~ '">', end_link='</a>')|safe }}</p>
             </div>
             {% endif %}
         {% else %}
             <div class="alert alert-light">
-                <h5>Search for music</h5>
-                <p>Enter a song title, artist name, album, or genre to find music in our library.</p>
+                <h5>{{ _('Search for music') }}</h5>
+                <p>{{ _('Enter a song title, artist name, album, or genre to find music in our library.') }}</p>
             </div>
         {% endif %}
     </div>
@@ -92,22 +92,22 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add to Playlist</h5>
+                <h5 class="modal-title">{{ _('Add to Playlist') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <form id="addToPlaylistForm">
                     <input type="hidden" id="modalSongId" name="song_id">
                     <div class="mb-3">
-                        <label for="playlistSelect" class="form-label">Select Playlist</label>
+                        <label for="playlistSelect" class="form-label">{{ _('Select Playlist') }}</label>
                         <select class="form-select" id="playlistSelect" name="playlist_id" required>
-                            <option value="">Choose a playlist...</option>
+                            <option value="">{{ _('Choose a playlist...') }}</option>
                             {% for playlist in current_user.playlists %}
                             <option value="{{ playlist.id }}">{{ playlist.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Add to Playlist</button>
+                    <button type="submit" class="btn btn-primary">{{ _('Add to Playlist') }}</button>
                 </form>
             </div>
         </div>

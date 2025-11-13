@@ -3,7 +3,7 @@
 {% block content %}
 <div class="row">
     <div class="col-md-8">
-        <h2>Latest Uploads</h2>
+        <h2>{{ _('Latest Uploads') }}</h2>
         <div class="row">
             {% for song in songs %}
             <div class="col-md-6 mb-3">
@@ -12,12 +12,12 @@
                         <h5 class="card-title">{{ song.title }}</h5>
                         <p class="card-text">{{ song.artist }}</p>
                         <button class="btn btn-primary btn-sm play-btn" data-song-id="{{ song.id }}">
-                            Play
+                            {{ _('Play') }}
                         </button>
                         {% if current_user.is_authenticated %}
                         <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" 
                                 data-bs-target="#addToPlaylistModal" data-song-id="{{ song.id }}">
-                            Add to Playlist
+                            {{ _('Add to Playlist') }}
                         </button>
                         {% endif %}
                     </div>
@@ -27,10 +27,10 @@
         </div>
     </div>
     <div class="col-md-4">
-        <h2>Welcome to MusicStream</h2>
-        <p>Your personal online music streaming platform.</p>
+        <h2>{{ _('Welcome to MusicStream') }}</h2>
+        <p>{{ _('Your personal online music streaming platform.') }}</p>
         {% if not current_user.is_authenticated %}
-        <p><a href="{{ url_for('auth.register') }}" class="btn btn-primary">Join Now</a></p>
+        <p><a href="{{ url_for('auth.register') }}" class="btn btn-primary">{{ _('Join Now') }}</a></p>
         {% endif %}
     </div>
 </div>
@@ -40,22 +40,22 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add to Playlist</h5>
+                <h5 class="modal-title">{{ _('Add to Playlist') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <form id="addToPlaylistForm">
                     <input type="hidden" id="modalSongId" name="song_id">
                     <div class="mb-3">
-                        <label for="playlistSelect" class="form-label">Select Playlist</label>
+                        <label for="playlistSelect" class="form-label">{{ _('Select Playlist') }}</label>
                         <select class="form-select" id="playlistSelect" name="playlist_id" required>
-                            <option value="">Choose a playlist...</option>
+                            <option value="">{{ _('Choose a playlist...') }}</option>
                             {% for playlist in current_user.playlists %}
                             <option value="{{ playlist.id }}">{{ playlist.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Add to Playlist</button>
+                    <button type="submit" class="btn btn-primary">{{ _('Add to Playlist') }}</button>
                 </form>
             </div>
         </div>
