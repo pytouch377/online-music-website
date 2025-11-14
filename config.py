@@ -25,4 +25,5 @@ class Config:
     # 国际化配置
     LANGUAGES = ['en', 'zh']
     BABEL_DEFAULT_LOCALE = 'en'
-    BABEL_DEFAULT_TIMEZONE = 'UTC'
+    # 使用东八区北京时间
+    BABEL_DEFAULT_TIMEZONE = 'Asia/Shanghai'

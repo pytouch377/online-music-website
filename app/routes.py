@@ -7,8 +7,8 @@ from flask_login import current_user, login_required
 from flask_babel import _
 from werkzeug.utils import secure_filename
 from app import db
-from app.models import Song, Playlist, PlaylistItem, User
-from app.forms import SongUploadForm, PlaylistForm, ProfileForm
+from app.models import Song, Playlist, PlaylistItem, User, Comment, Favorite
+from app.forms import SongUploadForm, PlaylistForm, ProfileForm, CommentForm
 
 bp = Blueprint('main', __name__)
 
@@ -326,6 +326,26 @@ def my_music():
         page=page, per_page=20, error_out=False)
     return render_template('my_music.html', title='My Music', songs=songs)
 
+@bp.route('/song/<int:song_id>/visibility', methods=['POST'])
+@login_required
+def update_song_visibility(song_id):
+    """更新歌曲公开/私人状态"""
+    song = Song.query.get_or_404(song_id)
+
+    # 只能修改自己的歌曲
+    if song.user_id != current_user.id:
+        flash(_('You can only change visibility for your own songs.'), 'error')
+        return redirect(url_for('main.my_music'))
+
+    new_visibility = request.form.get('visibility')
+    if new_visibility not in ('public', 'private'):
+        flash(_('Invalid visibility value.'), 'error')
+        return redirect(request.referrer or url_for('main.my_music'))
+
+    song.visibility = new_visibility
+    db.session.commit()
+    return redirect(request.referrer or url_for('main.my_music'))
+
 @bp.route('/playlists')
 @login_required
 def playlists():
@@ -353,7 +373,40 @@ def create_playlist():
 @bp.route('/playlist/<int:playlist_id>')
 def playlist_detail(playlist_id):
     playlist = Playlist.query.get_or_404(playlist_id)
-    return render_template('playlist_detail.html', title=playlist.name, playlist=playlist)
+    # 只获取仍然存在歌曲的播放列表项
+    items = playlist.items.join(Song).order_by(PlaylistItem.order, PlaylistItem.added_at).all()
+    return render_template('playlist_detail.html', title=playlist.name, playlist=playlist, items=items)
+
+@bp.route('/api/add_to_playlist', methods=['POST'])
+@login_required
+def api_add_to_playlist():
+    data = request.get_json() or {}
+    playlist_id = data.get('playlist_id')
+    song_id = data.get('song_id')
+
+    if not playlist_id or not song_id:
+        return jsonify({'success': False, 'message': _('Missing playlist or song id')}), 400
+
+    playlist = Playlist.query.get(playlist_id)
+    if not playlist or playlist.user_id != current_user.id:
+        return jsonify({'success': False, 'message': _('Playlist not found or permission denied')}), 404
+
+    song = Song.query.get(song_id)
+    if not song:
+        return jsonify({'success': False, 'message': _('Song not found')}), 404
+
+    # 检查是否已在播放列表中
+    existing = PlaylistItem.query.filter_by(playlist_id=playlist.id, song_id=song.id).first()
+    if existing:
+        return jsonify({'success': True, 'message': _('Song is already in this playlist')}), 200
+
+    # 计算排序号
+    max_order = playlist.items.with_entities(db.func.max(PlaylistItem.order)).scalar() or 0
+    item = PlaylistItem(playlist_id=playlist.id, song_id=song.id, order=max_order + 1)
+    db.session.add(item)
+    db.session.commit()
+
+    return jsonify({'success': True, 'message': _('Added to playlist successfully')}), 201
 
 @bp.route('/search')
 def search():
@@ -570,6 +623,10 @@ def user_profile(username):
         user_id=user.id, 
         visibility='public'
     ).order_by(Playlist.created_at.desc()).limit(3).all()
+
+    # 为每个公开播放列表计算实际歌曲数量（只统计仍存在的歌曲）
+    for pl in public_playlists:
+        pl.song_count = PlaylistItem.query.join(Song).filter(PlaylistItem.playlist_id == pl.id).count()
     
     # 检查当前用户是否关注此用户
     is_following = False
@@ -651,6 +708,125 @@ def set_language(language=None):
     if language in ['en', 'zh']:
         session['language'] = language
     return redirect(request.referrer or url_for('main.index'))
+
+@bp.route('/song/<int:song_id>')
+def song_detail(song_id):
+    """歌曲详情页面，显示评论和互动"""
+    song = Song.query.get_or_404(song_id)
+    
+    # 只允许查看公开歌曲，或者是自己的歌曲
+    if song.visibility != 'public' and (not current_user.is_authenticated or song.user_id != current_user.id):
+        flash(_('This song is not available.'), 'error')
+        return redirect(url_for('main.index'))
+    
+    # 增加播放次数
+    song.play_count += 1
+    db.session.commit()
+    
+    # 获取评论
+    comments = Comment.query.filter_by(song_id=song_id).order_by(Comment.created_at.desc()).all()
+    
+    # 检查当前用户是否收藏了这首歌
+    is_favorited = False
+    if current_user.is_authenticated:
+        is_favorited = Favorite.query.filter_by(user_id=current_user.id, song_id=song_id).first() is not None
+    
+    # 评论表单
+    form = CommentForm()
+    
+    return render_template('song_detail.html', 
+                         title=f"{song.title} - {song.artist}",
+                         song=song, 
+                         comments=comments, 
+                         form=form,
+                         is_favorited=is_favorited)
+
+@bp.route('/song/<int:song_id>/comment', methods=['POST'])
+@login_required
+def add_comment(song_id):
+    """添加评论"""
+    song = Song.query.get_or_404(song_id)
+    form = CommentForm()
+    if form.validate_on_submit():
+        comment = Comment(
+            content=form.content.data,
+            user_id=current_user.id,
+            song_id=song_id
+        )
+        db.session.add(comment)
+        db.session.commit()
+        
+        # 如果是通过AJAX提交（前端设置了 X-Requested-With）则返回JSON
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return jsonify({
+                'success': True,
+                'comment': {
+                    'id': comment.id,
+                    'content': comment.content,
+                    'author': comment.author.username,
+                    'created_at': comment.created_at.strftime('%Y-%m-%d %H:%M')
+                }
+            })
+        else:
+            flash(_('Comment added successfully!'), 'success')
+            return redirect(url_for('main.song_detail', song_id=song_id))
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return jsonify({'success': False, 'errors': form.errors}), 400
+    else:
+        flash(_('Please enter a valid comment.'), 'error')
+        return redirect(url_for('main.song_detail', song_id=song_id))
+
+@bp.route('/song/<int:song_id>/favorite', methods=['POST'])
+@login_required
+def toggle_favorite(song_id):
+    """切换收藏状态"""
+    song = Song.query.get_or_404(song_id)
+    
+    # 只能收藏公开歌曲
+    if song.visibility != 'public':
+        return jsonify({'success': False, 'error': 'Cannot favorite private songs'}), 403
+    
+    favorite = Favorite.query.filter_by(user_id=current_user.id, song_id=song_id).first()
+    
+    if favorite:
+        # 取消收藏
+        db.session.delete(favorite)
+        song.likes_count = max(0, song.likes_count - 1)
+        is_favorited = False
+        message = _('Removed from favorites')
+    else:
+        # 添加收藏
+        favorite = Favorite(user_id=current_user.id, song_id=song_id)
+        db.session.add(favorite)
+        song.likes_count += 1
+        is_favorited = True
+        message = _('Added to favorites')
+    
+    db.session.commit()
+    
+    if request.is_json:
+        return jsonify({
+            'success': True,
+            'is_favorited': is_favorited,
+            'likes_count': song.likes_count,
+            'message': message
+        })
+    else:
+        flash(message, 'success')
+        return redirect(url_for('main.song_detail', song_id=song_id))
+
+@bp.route('/favorites')
+@login_required
+def favorites():
+    """用户收藏的歌曲列表"""
+    page = request.args.get('page', 1, type=int)
+    favorites = db.session.query(Song).join(Favorite).filter(
+        Favorite.user_id == current_user.id
+    ).order_by(Favorite.created_at.desc()).paginate(
+        page=page, per_page=20, error_out=False
+    )
+    return render_template('favorites.html', title='My Favorites', songs=favorites)
 
 @bp.route('/delete_song/<int:song_id>', methods=['POST'])
 @login_required

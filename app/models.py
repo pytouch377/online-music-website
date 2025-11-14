@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login_manager
@@ -149,6 +149,15 @@ class Comment(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     song_id = db.Column(db.Integer, db.ForeignKey('song.id'))
     
+    @property
+    def local_created_at(self):
+        """Return created_at converted from UTC to Asia/Shanghai (UTC+8) for display."""
+        if self.created_at is None:
+            return None
+        # 假设数据库中的时间是UTC无时区信息，这里手动视为UTC再加8小时
+        aware = self.created_at.replace(tzinfo=timezone.utc)
+        return aware + timedelta(hours=8)
+
     def __repr__(self):
         return f'<Comment {self.id}>'
 

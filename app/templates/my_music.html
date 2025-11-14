@@ -21,19 +21,35 @@
                     </div>
                     {% endif %}
                     <div class="card-body">
-                        <h5 class="card-title">{{ song.title }}</h5>
-                        <p class="card-text">
+                        <h5 class="card-title">
+                            <a href="{{ url_for('main.song_detail', song_id=song.id) }}" class="text-decoration-none">
+                                {{ song.title }}
+                            </a>
+                        </h5>
+                        <p class="card-text mb-1">
                             <strong>{{ _('Artist') }}:</strong> {{ song.artist }}<br>
                             {% if song.album %}<strong>{{ _('Album') }}:</strong> {{ song.album }}<br>{% endif %}
-                            <strong>{{ _('Visibility') }}:</strong> 
-                            <span class="badge {% if song.visibility == 'public' %}bg-success{% else %}bg-secondary{% endif %}">
-                                {% if song.visibility == 'public' %}
-                                    {{ _('Public') }}
-                                {% else %}
-                                    {{ _('Private') }}
-                                {% endif %}
-                            </span>
                         </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ _('Visibility') }}:</strong> 
+                                <span class="badge {% if song.visibility == 'public' %}bg-success{% else %}bg-secondary{% endif %}">
+                                    {% if song.visibility == 'public' %}
+                                        {{ _('Public') }}
+                                    {% else %}
+                                        {{ _('Private') }}
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <form action="{{ url_for('main.update_song_visibility', song_id=song.id) }}" method="post" class="visibility-form">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <input type="hidden" name="visibility" value="{{ 'private' if song.visibility == 'public' else 'public' }}">
+                                <div class="form-check form-switch mb-0">
+                                    <input class="form-check-input visibility-toggle" type="checkbox"
+                                           role="switch" {% if song.visibility == 'public' %}checked{% endif %}>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                     <div class="card-footer">
                         <div class="d-flex justify-content-between align-items-center">
@@ -56,7 +72,8 @@
                                 </button>
                                 <!-- 删除按钮 -->
                                 <form action="{{ url_for('main.delete_song', song_id=song.id) }}" method="post" 
-                                      class="delete-form d-inline" onsubmit="return confirm('{{ _('Are you sure you want to delete this song?') }}');">
+                                      class="delete-form d-inline" data-confirm="{{ _('Are you sure you want to delete this song?') }}">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                     <button type="submit" class="btn btn-outline-danger btn-sm">
                                         🗑️
                                     </button>
@@ -132,14 +149,66 @@
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const coverMessages = {{ {
+<script id="coverMessagesData" type="application/json">
+    {{ {
         "success": _('Cover updated successfully!'),
         "failure": _('Failed to update cover: %(error)s', error='%(error)s'),
         "failure_unknown": _('Failed to update cover. Please try again later.'),
         "unknown_error": _('Unknown error')
-    }|tojson }};
+    }|tojson }}
+</script>
+
+<script>
+// @ts-nocheck
+document.addEventListener('DOMContentLoaded', function() {
+    const coverMessages = JSON.parse(document.getElementById('coverMessagesData').textContent);
+    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+    const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : '';
+
+    // 可见性滑块：切换公开/私人
+    document.querySelectorAll('.visibility-form').forEach(form => {
+        const toggle = form.querySelector('.visibility-toggle');
+        const hiddenInput = form.querySelector('input[name="visibility"]');
+        const badge = form.closest('.d-flex').querySelector('.badge');
+        if (!toggle || !hiddenInput) return;
+
+        toggle.addEventListener('change', function() {
+            const newVisibility = this.checked ? 'public' : 'private';
+            hiddenInput.value = newVisibility;
+
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                if (badge) {
+                    badge.classList.remove('bg-success', 'bg-secondary');
+                    if (newVisibility === 'public') {
+                        badge.classList.add('bg-success');
+                        badge.textContent = "{{ _('Public') }}";
+                    } else {
+                        badge.classList.add('bg-secondary');
+                        badge.textContent = "{{ _('Private') }}";
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error updating visibility:', error);
+                // 失败时恢复开关状态
+                this.checked = !this.checked;
+                hiddenInput.value = this.checked ? 'public' : 'private';
+            });
+        });
+    });
 
     // 更换封面按钮事件
     document.querySelectorAll('.update-cover-btn').forEach(button => {
@@ -155,6 +224,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
                 }
             })
             .then(response => response.json())
@@ -186,20 +256,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         };
                         img.replaceWith(newImg);
                     }
-                    
-                    // 显示成功消息
-                    const alert = document.createElement('div');
-                    alert.className = 'alert alert-success alert-dismissible fade show mt-2';
-                    const debugInfo = data.debug_info ? ` (${data.debug_info.downloaded_file})` : '';
-                    alert.innerHTML = `🎨 ${coverMessages.success}${debugInfo} <button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
-                    card.querySelector('.card-body').appendChild(alert);
-                    
-                    // 3秒后自动隐藏消息
-                    setTimeout(() => {
-                        if (alert.parentNode) {
-                            alert.remove();
-                        }
-                    }, 3000);
                 } else {
                     const errorText = data.error ? coverMessages.failure.replace('%(error)s', data.error) : coverMessages.failure.replace('%(error)s', coverMessages.unknown_error);
                     alert(errorText);

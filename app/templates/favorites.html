@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-heart text-danger"></i> 我的收藏</h2>
+        <span class="badge bg-secondary">{{ songs.total }} 首歌曲</span>
+    </div>
+
+    {% if songs.items %}
+        <div class="row">
+            {% for song in songs.items %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="position-relative">
+                            {% if song.cover_image %}
+                                <img src="{{ url_for('static', filename=song.cover_image) }}" 
+                                     class="card-img-top" style="height: 200px; object-fit: cover;" alt="Album Cover">
+                            {% else %}
+                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                                     style="height: 200px;">
+                                    <i class="fas fa-music fa-3x text-muted"></i>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- 播放按钮覆盖层 -->
+                            <div class="position-absolute top-50 start-50 translate-middle">
+                                <button class="btn btn-primary btn-lg rounded-circle" 
+                                        onclick="playAudio({{ song.id }})" 
+                                        id="play-btn-{{ song.id }}"
+                                        style="width: 60px; height: 60px; opacity: 0.9;">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <a href="{{ url_for('main.song_detail', song_id=song.id) }}" 
+                                   class="text-decoration-none">
+                                    {{ song.title }}
+                                </a>
+                            </h6>
+                            <p class="card-text text-muted">{{ song.artist }}</p>
+                            {% if song.album %}
+                                <p class="card-text"><small class="text-muted">{{ song.album }}</small></p>
+                            {% endif %}
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <i class="fas fa-user"></i> 
+                                    <a href="{{ url_for('main.user_profile', username=song.uploader.username) }}" 
+                                       class="text-decoration-none">
+                                        {{ song.uploader.username }}
+                                    </a>
+                                </small>
+                                <div>
+                                    <small class="text-muted">
+                                        <i class="fas fa-play"></i> {{ song.play_count }}
+                                    </small>
+                                    <small class="text-muted ms-2">
+                                        <i class="fas fa-heart text-danger"></i> {{ song.likes_count }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer bg-transparent">
+                            <div class="d-flex justify-content-between">
+                                <button class="btn btn-outline-danger btn-sm" 
+                                        onclick="toggleFavorite({{ song.id }}, this)">
+                                    <i class="fas fa-heart"></i> 取消收藏
+                                </button>
+                                <a href="{{ url_for('main.song_detail', song_id=song.id) }}" 
+                                   class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-info-circle"></i> 详情
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- 分页 -->
+        {% if songs.pages > 1 %}
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if songs.has_prev %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('main.favorites', page=songs.prev_num) }}">上一页</a>
+                        </li>
+                    {% endif %}
+                    
+                    {% for page_num in songs.iter_pages() %}
+                        {% if page_num %}
+                            {% if page_num != songs.page %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('main.favorites', page=page_num) }}">{{ page_num }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ page_num }}</span>
+                                </li>
+                            {% endif %}
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">…</span>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if songs.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('main.favorites', page=songs.next_num) }}">下一页</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-heart-broken fa-4x text-muted mb-3"></i>
+            <h4 class="text-muted">还没有收藏任何歌曲</h4>
+            <p class="text-muted">去 <a href="{{ url_for('main.library') }}">音乐库</a> 发现喜欢的音乐吧！</p>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+// 获取CSRF token
+function getCSRFToken() {
+    const token = document.querySelector('meta[name=csrf-token]');
+    return token ? token.getAttribute('content') : '';
+}
+
+// 播放音频（使用全局播放器）
+function playAudio(songId) {
+    // 使用全局播放器函数
+    if (typeof window.playAudio === 'function') {
+        window.playAudio(songId);
+    } else {
+        // 备用方案
+        fetch(`/api/song/${songId}`)
+            .then(response => response.json())
+            .then(data => {
+                const player = document.getElementById('audio-player');
+                player.src = data.file_path;
+                player.style.display = 'block';
+                player.play();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('播放失败');
+            });
+    }
+}
+
+// 取消收藏
+function toggleFavorite(songId, button) {
+    fetch(`/song/${songId}/favorite`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken()
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && !data.is_favorited) {
+            // 移除卡片
+            const card = button.closest('.col-md-6');
+            card.style.transition = 'opacity 0.3s';
+            card.style.opacity = '0';
+            setTimeout(() => {
+                card.remove();
+                
+                // 检查是否还有歌曲
+                const remainingCards = document.querySelectorAll('.col-md-6');
+                if (remainingCards.length === 0) {
+                    location.reload(); // 重新加载页面显示空状态
+                }
+            }, 300);
+            
+            showToast('已取消收藏');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('操作失败，请重试');
+    });
+}
+
+// 显示提示消息
+function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'alert alert-info alert-dismissible fade show position-fixed';
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 250px;';
+    toast.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+        }
+    }, 3000);
+}
+</script>
+{% endblock %}

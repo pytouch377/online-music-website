@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- 歌曲信息 -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            {% if song.cover_image %}
+                                <img src="{{ url_for('static', filename=song.cover_image) }}" 
+                                     class="img-fluid rounded" alt="Album Cover">
+                            {% else %}
+                                <div class="bg-light rounded d-flex align-items-center justify-content-center" 
+                                     style="height: 200px;">
+                                    <i class="fas fa-music fa-3x text-muted"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8">
+                            <h2>{{ song.title }}</h2>
+                            <h5 class="text-muted">{{ song.artist }}</h5>
+                            {% if song.album %}
+                                <p><strong>专辑:</strong> {{ song.album }}</p>
+                            {% endif %}
+                            {% if song.genre %}
+                                <p><strong>类型:</strong> {{ song.genre }}</p>
+                            {% endif %}
+                            <p><strong>上传者:</strong> 
+                                <a href="{{ url_for('main.user_profile', username=song.uploader.username) }}">
+                                    {{ song.uploader.username }}
+                                </a>
+                            </p>
+                            <p><strong>上传时间:</strong> {{ song.upload_date.strftime('%Y-%m-%d') }}</p>
+                            <p><strong>播放次数:</strong> {{ song.play_count }}</p>
+                            <p><strong>收藏数:</strong> <span id="likes-count">{{ song.likes_count }}</span></p>
+                            
+                            <!-- 互动按钮 -->
+                            <div class="mt-3">
+                                {% if current_user.is_authenticated %}
+                                    <button id="favorite-btn" class="btn btn-outline-danger" 
+                                            data-song-id="{{ song.id }}"
+                                            data-favorited="{{ 'true' if is_favorited else 'false' }}">
+                                        <i class="fas fa-heart{% if not is_favorited %}-o{% endif %}"></i>
+                                        <span>{{ '取消收藏' if is_favorited else '收藏' }}</span>
+                                    </button>
+                                {% endif %}
+                                <button class="btn btn-primary" onclick="playAudio({{ song.id }})" id="play-btn-{{ song.id }}">
+                                    <i class="fas fa-play"></i> 播放
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 评论区 -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-comments"></i> 评论 ({{ comments|length }})</h5>
+                </div>
+                <div class="card-body">
+                    {% if current_user.is_authenticated %}
+                        <!-- 评论表单 -->
+                        <form id="comment-form" method="POST" action="{{ url_for('main.add_comment', song_id=song.id) }}">
+                            {{ form.hidden_tag() }}
+                            <div class="mb-3">
+                                {{ form.content.label(class="form-label") }}
+                                {{ form.content(class="form-control", rows="3", placeholder="写下你的评论...") }}
+                            </div>
+                            {{ form.submit(class="btn btn-primary btn-sm") }}
+                        </form>
+                        <hr>
+                    {% else %}
+                        <p class="text-muted">
+                            <a href="{{ url_for('auth.login') }}">登录</a> 后可以评论
+                        </p>
+                        <hr>
+                    {% endif %}
+                    
+                    <!-- 评论列表 -->
+                    <div id="comments-list" style="max-height: 400px; overflow-y: auto;">
+                        {% for comment in comments %}
+                            <div class="comment mb-3">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        {% if comment.author.avatar %}
+                                            <img src="{{ url_for('static', filename=comment.author.avatar) }}" 
+                                                 class="rounded-circle" width="32" height="32" alt="Avatar">
+                                        {% else %}
+                                            <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center" 
+                                                 style="width: 32px; height: 32px;">
+                                                <i class="fas fa-user text-white"></i>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="flex-grow-1 ms-2">
+                                        <div class="d-flex justify-content-between">
+                                            <strong>
+                                                <a href="{{ url_for('main.user_profile', username=comment.author.username) }}" 
+                                                   class="text-decoration-none">
+                                                    {{ comment.author.username }}
+                                                </a>
+                                            </strong>
+                                            <small class="text-muted">{{ comment.local_created_at.strftime('%m-%d %H:%M') }}</small>
+                                        </div>
+                                        <p class="mb-0">{{ comment.content }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        
+                        {% if not comments %}
+                            <p class="text-muted text-center">还没有评论，来抢沙发吧！</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// 获取CSRF token
+function getCSRFToken() {
+    const token = document.querySelector('meta[name=csrf-token]');
+    return token ? token.getAttribute('content') : '';
+}
+
+// 收藏功能
+document.getElementById('favorite-btn')?.addEventListener('click', function() {
+    const btn = this;
+    const songId = btn.dataset.songId;
+    const isFavorited = btn.dataset.favorited === 'true';
+    
+    fetch(`/song/${songId}/favorite`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken()
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const icon = btn.querySelector('i');
+            const span = btn.querySelector('span');
+            const likesCount = document.getElementById('likes-count');
+            
+            if (data.is_favorited) {
+                icon.className = 'fas fa-heart';
+                span.textContent = '取消收藏';
+                btn.dataset.favorited = 'true';
+            } else {
+                icon.className = 'fas fa-heart-o';
+                span.textContent = '收藏';
+                btn.dataset.favorited = 'false';
+            }
+            
+            likesCount.textContent = data.likes_count;
+            
+            // 显示提示消息
+            showToast(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('操作失败，请重试');
+    });
+});
+
+// 显示提示消息
+function showToast(message) {
+    // 简单的提示实现
+    const toast = document.createElement('div');
+    toast.className = 'alert alert-info alert-dismissible fade show position-fixed';
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 250px;';
+    toast.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.body.appendChild(toast);
+    
+    // 3秒后自动消失
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+        }
+    }, 3000);
+}
+</script>
+{% endblock %}

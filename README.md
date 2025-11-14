@@ -9,6 +9,10 @@ A full-featured music streaming platform built with Flask.
 - 🔍 Advanced search functionality
 - 📱 Responsive design
 - 🎛️ Full music player controls
+- 💬 **NEW: Comment system for public songs**
+- ❤️ **NEW: Like/Favorite functionality**
+- 👤 **NEW: User profiles and social features**
+- 📊 **NEW: Play counts and interaction statistics**
 
 ## Live Demo
 [Add your deployment link here]

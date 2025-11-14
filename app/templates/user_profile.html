@@ -139,7 +139,7 @@
                        class="list-group-item list-group-item-action">
                         <div class="d-flex w-100 justify-content-between">
                             <h6 class="mb-1">{{ playlist.name }}</h6>
-                            <small>{{ _('%(count)s songs', count=playlist.items.count()) }}</small>
+                            <small>{{ _('%(count)s songs', count=playlist.song_count) }}</small>
                         </div>
                         {% if playlist.description %}
                         <p class="mb-1">{{ playlist.description }}</p>

@@ -5,21 +5,84 @@
     <div class="col-md-8">
         <h2>{{ _('Latest Uploads') }}</h2>
         <div class="row">
-            {% for song in songs %}
+            {% for song in new_songs %}
             <div class="col-md-6 mb-3">
                 <div class="card">
+                    {% if song.cover_image %}
+                        <img src="{{ url_for('static', filename=song.cover_image) }}" 
+                             class="card-img-top" style="height: 150px; object-fit: cover;" alt="{{ _('Album Cover') }}">
+                    {% endif %}
                     <div class="card-body">
-                        <h5 class="card-title">{{ song.title }}</h5>
+                        <h5 class="card-title">
+                            <a href="{{ url_for('main.song_detail', song_id=song.id) }}" 
+                               class="text-decoration-none">{{ song.title }}</a>
+                        </h5>
                         <p class="card-text">{{ song.artist }}</p>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                {{ _('by') }} <a href="{{ url_for('main.user_profile', username=song.uploader.username) }}" 
+                                      class="text-decoration-none">{{ song.uploader.username }}</a>
+                            </small>
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <small class="text-muted">
+                                    <i class="fas fa-play"></i> {{ song.play_count }}
+                                    <i class="fas fa-heart text-danger ms-2"></i> {{ song.likes_count }}
+                                    <i class="fas fa-comments ms-2"></i> {{ song.comments.count() }}
+                                </small>
+                            </div>
+                        </div>
                         <button class="btn btn-primary btn-sm play-btn" data-song-id="{{ song.id }}">
                             {{ _('Play') }}
                         </button>
-                        {% if current_user.is_authenticated %}
-                        <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" 
-                                data-bs-target="#addToPlaylistModal" data-song-id="{{ song.id }}">
-                            {{ _('Add to Playlist') }}
+                        <a href="{{ url_for('main.song_detail', song_id=song.id) }}" 
+                           class="btn btn-outline-info btn-sm">
+                            <i class="fas fa-info-circle"></i> {{ _('Details') }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <h2 class="mt-4">{{ _('Popular Songs') }}</h2>
+        <div class="row">
+            {% for song in public_songs %}
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    {% if song.cover_image %}
+                        <img src="{{ url_for('static', filename=song.cover_image) }}" 
+                             class="card-img-top" style="height: 150px; object-fit: cover;" alt="Album Cover">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{{ url_for('main.song_detail', song_id=song.id) }}" 
+                               class="text-decoration-none">{{ song.title }}</a>
+                        </h5>
+                        <p class="card-text">{{ song.artist }}</p>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                by <a href="{{ url_for('main.user_profile', username=song.uploader.username) }}" 
+                                      class="text-decoration-none">{{ song.uploader.username }}</a>
+                            </small>
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <small class="text-muted">
+                                    <i class="fas fa-play"></i> {{ song.play_count }}
+                                    <i class="fas fa-heart text-danger ms-2"></i> {{ song.likes_count }}
+                                    <i class="fas fa-comments ms-2"></i> {{ song.comments.count() }}
+                                </small>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-sm play-btn" data-song-id="{{ song.id }}">
+                            {{ _('Play') }}
                         </button>
-                        {% endif %}
+                        <a href="{{ url_for('main.song_detail', song_id=song.id) }}" 
+                           class="btn btn-outline-info btn-sm">
+                            <i class="fas fa-info-circle"></i> {{ _('Details') }}
+                        </a>
                     </div>
                 </div>
             </div>
@@ -27,10 +90,59 @@
         </div>
     </div>
     <div class="col-md-4">
-        <h2>{{ _('Welcome to MusicStream') }}</h2>
-        <p>{{ _('Your personal online music streaming platform.') }}</p>
-        {% if not current_user.is_authenticated %}
-        <p><a href="{{ url_for('auth.register') }}" class="btn btn-primary">{{ _('Join Now') }}</a></p>
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5><i class="fas fa-music"></i> {{ _('Welcome to MusicStream') }}</h5>
+            </div>
+            <div class="card-body">
+                <p>{{ _('Your personal online music streaming platform with social features!') }}</p>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-upload text-primary"></i> {{ _('Upload your music') }}</li>
+                    <li><i class="fas fa-heart text-danger"></i> {{ _('Like and favorite songs') }}</li>
+                    <li><i class="fas fa-comments text-info"></i> {{ _('Comment and interact') }}</li>
+                    <li><i class="fas fa-users text-success"></i> {{ _('Follow other users') }}</li>
+                </ul>
+                {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary">{{ _('Join Now') }}</a>
+                {% else %}
+                <a href="{{ url_for('main.upload') }}" class="btn btn-primary">{{ _('Upload Music') }}</a>
+                {% endif %}
+            </div>
+        </div>
+        
+        {% if current_user.is_authenticated %}
+        <div class="card">
+            <div class="card-header">
+                <h6><i class="fas fa-chart-line"></i> {{ _('Quick Stats') }}</h6>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="border-end">
+                            <h4 class="text-primary">{{ current_user.uploaded_songs.filter_by(visibility='public').count() }}</h4>
+                            <small class="text-muted">{{ _('My Songs') }}</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="text-danger">{{ current_user.favorites.count() }}</h4>
+                        <small class="text-muted">{{ _('Favorites') }}</small>
+                    </div>
+                </div>
+                <hr>
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="border-end">
+                            <h4 class="text-success">{{ current_user.get_followers_count() }}</h4>
+                            <small class="text-muted">{{ _('Followers') }}</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="text-info">{{ current_user.get_following_count() }}</h4>
+                        <small class="text-muted">{{ _('Following') }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
         {% endif %}
     </div>
 </div>
