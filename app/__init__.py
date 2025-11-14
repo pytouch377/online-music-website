@@ -38,8 +38,12 @@ def create_app():
     
     @app.context_processor
     def inject_locale():
-        locale = get_locale()
-        return {'current_locale': locale}
+        # 提供一个带 language 属性的对象给模板使用
+        class SimpleLocale:
+            def __init__(self, language):
+                self.language = language
+
+        return {'current_locale': SimpleLocale(get_locale())}
     
     @app.context_processor
     def inject_csrf_token():

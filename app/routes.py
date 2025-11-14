@@ -2,6 +2,9 @@ import os
 import uuid
 import requests
 import random
+import re
+from collections import Counter
+
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, send_from_directory, current_app, session
 from flask_login import current_user, login_required
 from flask_babel import _
@@ -78,6 +81,7 @@ def search_netease_cover(artist, title, exclude_albums=None):
         print(f"NetEase search error: {e}")
     return None
 
+
 def search_qq_music_cover(artist, title, exclude_albums=None):
     """搜索QQ音乐封面"""
     if exclude_albums is None:
@@ -147,6 +151,7 @@ def search_qq_music_cover(artist, title, exclude_albums=None):
         print(f"QQ Music search error: {e}")
     return None
 
+
 def download_cover_image(cover_url, save_dir):
     """下载封面图片并保存到本地"""
     try:
@@ -178,6 +183,50 @@ def index():
     
     return render_template('index.html', title='Home', 
                          public_songs=public_songs, new_songs=new_songs)
+
+@bp.route('/recommendations')
+def recommendations():
+    """基于用户收藏和歌曲风格的简单推荐列表。"""
+    base_query = Song.query.filter_by(visibility='public')
+    recommended_songs = []
+
+    if current_user.is_authenticated:
+        # 当前用户收藏的歌曲
+        favorite_song_ids = [fav.song_id for fav in Favorite.query.filter_by(user_id=current_user.id).all()]
+
+        if favorite_song_ids:
+            liked_songs = Song.query.filter(Song.id.in_(favorite_song_ids)).all()
+            genres = [s.genre for s in liked_songs if s.genre]
+
+            if genres:
+                genre_counter = Counter(genres)
+                top_genres = [g for g, _ in genre_counter.most_common(3)]
+
+                # 推荐同风格但未被当前用户收藏的公共歌曲，按播放量+点赞数排序
+                recommended_songs = base_query.filter(
+                    Song.genre.in_(top_genres),
+                    ~Song.id.in_(favorite_song_ids)
+                ).order_by(
+                    Song.play_count.desc(),
+                    Song.likes_count.desc()
+                ).limit(20).all()
+
+        # 如果没有足够数据或没有收藏，退化为热门歌曲推荐
+        if not recommended_songs:
+            recommended_songs = base_query.order_by(
+                Song.play_count.desc(),
+                Song.likes_count.desc()
+            ).limit(20).all()
+    else:
+        # 未登录用户：简单返回热门公共歌曲
+        recommended_songs = base_query.order_by(
+            Song.play_count.desc(),
+            Song.likes_count.desc()
+        ).limit(20).all()
+
+    return render_template('recommendations.html',
+                           title=_('Recommendations'),
+                           songs=recommended_songs)
 
 @bp.route('/upload', methods=['GET', 'POST'])
 @login_required
@@ -535,7 +584,7 @@ def api_update_cover(song_id):
             except Exception as e:
                 print(f"Last.fm search error: {e}")
         
-        # 方案3: 最后备选 - 使用MusicBrainz + Cover Art Archive
+        # 方案3: 最后备选 - 使用简单占位封面
         if not cover_url:
             try:
                 # 简单的备选封面URL列表
@@ -547,8 +596,8 @@ def api_update_cover(song_id):
                     "https://via.placeholder.com/600x600/FFEAA7/333333?text=Music"
                 ]
                 cover_url = random.choice(fallback_covers)
-            except:
-                pass
+            except Exception as e:
+                print(f"Fallback cover selection error: {e}")
         
         if cover_url:
             # 创建封面目录

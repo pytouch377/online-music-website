@@ -125,6 +125,10 @@ msgstr "首页"
 msgid "Library"
 msgstr "音乐库"
 
+#: app/templates/base.html:99
+msgid "Recommendations"
+msgstr "为你推荐"
+
 #: app/templates/base.html:98
 msgid "Upload"
 msgstr "上传"
@@ -251,6 +255,35 @@ msgstr "您的个人在线音乐流媒体平台。"
 #: app/templates/index.html:33
 msgid "Join Now"
 msgstr "立即加入"
+
+# 新首页介绍与统计文案
+#: app/templates/index.html:98
+msgid "Your personal online music streaming platform with social features!"
+msgstr "你的个人在线音乐流媒体平台，带有社交功能！"
+
+#: app/templates/index.html:100
+msgid "Upload your music"
+msgstr "上传你的音乐"
+
+#: app/templates/index.html:101
+msgid "Like and favorite songs"
+msgstr "点赞并收藏歌曲"
+
+#: app/templates/index.html:102
+msgid "Comment and interact"
+msgstr "评论并互动"
+
+#: app/templates/index.html:103
+msgid "Follow other users"
+msgstr "关注其他用户"
+
+#: app/templates/index.html:116
+msgid "Quick Stats"
+msgstr "快速统计"
+
+#: app/templates/index.html:123
+msgid "My Songs"
+msgstr "我的歌曲"
 
 #: app/templates/index.html:50 app/templates/library.html:109
 #: app/templates/my_music.html:120 app/templates/search.html:102
@@ -400,6 +433,34 @@ msgstr "您还没有创建播放列表。创建一个播放列表来整理您的
 #: app/templates/playlists.html:36
 msgid "Create Your First Playlist"
 msgstr "创建您的第一个播放列表"
+
+#: app/templates/recommendations.html:6
+msgid "Recommended for You"
+msgstr "为你推荐"
+
+#: app/templates/recommendations.html:12
+msgid "These recommendations are based on your listening history and favorites."
+msgstr "这些推荐基于你的收听历史和收藏。"
+
+#: app/templates/recommendations.html:22
+msgid "Album Cover"
+msgstr "专辑封面"
+
+#: app/templates/recommendations.html:82
+msgid "Details"
+msgstr "详情"
+
+#: app/templates/recommendations.html:93
+msgid "No recommendations available yet"
+msgstr "暂时没有可用的推荐"
+
+#: app/templates/recommendations.html:95
+msgid "Start listening to music and favoriting songs to get personalized recommendations."
+msgstr "开始收听音乐并收藏喜欢的歌曲，以获得个性化推荐。"
+
+#: app/templates/recommendations.html:97
+msgid "Explore Music Library"
+msgstr "浏览音乐库"
 
 #: app/templates/search.html:6
 msgid "Search Music"

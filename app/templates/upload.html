@@ -17,7 +17,7 @@
                         
                         <div class="mb-3">
                             <label for="audio_file" class="form-label fw-bold required">
-                                {{ form.audio_file.label.text }}
+                                {{ '音频文件' if current_locale and current_locale.language == 'zh' else 'Audio File' }}
                             </label>
                             <div class="input-group">
                                 {{ form.audio_file(class="form-control", id="audio_file") }}
@@ -33,7 +33,7 @@
                         
                         <div class="mb-3">
                             <label for="cover_image" class="form-label fw-bold">
-                                {{ form.cover_image.label.text }}
+                                {{ '封面图片（可选）' if current_locale and current_locale.language == 'zh' else 'Cover Image (optional)' }}
                             </label>
                             <div class="input-group">
                                 {{ form.cover_image(class="form-control", id="cover_image") }}
@@ -51,7 +51,7 @@
                             <div class="form-check">
                                 {{ form.auto_search_cover(class="form-check-input", id="auto_search_cover") }}
                                 <label class="form-check-label" for="auto_search_cover">
-                                    {{ form.auto_search_cover.label.text }}
+                                    {{ '自动在线搜索封面' if current_locale and current_locale.language == 'zh' else 'Auto search cover online' }}
                                 </label>
                             </div>
                             <div class="form-text">
@@ -68,7 +68,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="title" class="form-label fw-bold required">
-                                        {{ form.title.label.text }}
+                                        {{ '歌曲标题' if current_locale and current_locale.language == 'zh' else 'Song Title' }}
                                     </label>
                                     {{ form.title(class="form-control", placeholder=_('Enter song title'), id="title") }}
                                     {% for error in form.title.errors %}
@@ -121,9 +121,16 @@
                         
                         <div class="mb-3">
                             <label for="visibility" class="form-label fw-bold">
-                                {{ form.visibility.label.text }}
+                                {{ '可见性' if current_locale and current_locale.language == 'zh' else 'Visibility' }}
                             </label>
-                            {{ form.visibility(class="form-select") }}
+                            <select class="form-select" id="visibility" name="{{ form.visibility.name }}">
+                                <option value="public" {% if form.visibility.data == 'public' %}selected{% endif %}>
+                                    {{ '公开 - 与所有人分享' if current_locale and current_locale.language == 'zh' else 'Public - Share with everyone' }}
+                                </option>
+                                <option value="private" {% if form.visibility.data == 'private' %}selected{% endif %}>
+                                    {{ '私人 - 仅自己可见' if current_locale and current_locale.language == 'zh' else 'Private - Only visible to me' }}
+                                </option>
+                            </select>
                             {% for error in form.visibility.errors %}
                             <div class="text-danger">{{ error }}</div>
                             {% endfor %}
@@ -142,7 +149,11 @@
                     
                     <!-- 提交按钮 -->
                     <div class="mb-3">
-                        {{ form.submit(class="btn btn-primary btn-lg w-100", id="submit-btn") }}
+                        {{ form.submit(
+                            class="btn btn-primary btn-lg w-100",
+                            id="submit-btn",
+                            value=('上传歌曲' if current_locale and current_locale.language == 'zh' else 'Upload Song')
+                        ) }}
                         <a href="{{ url_for('main.library') }}" class="btn btn-secondary w-100 mt-2">{{ _('Cancel') }}</a>
                     </div>
                 </form>

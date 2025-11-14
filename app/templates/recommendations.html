@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-star text-warning"></i> {{ _('Recommended for You') }}</h2>
+    </div>
+
+    {% if songs %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> 
+            {{ _('These recommendations are based on your listening history and favorites.') }}
+        </div>
+        
+        <div class="row">
+            {% for song in songs %}
+                <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
+                    <div class="card h-100">
+                        <div class="position-relative">
+                            {% if song.cover_image %}
+                                <img src="{{ url_for('static', filename=song.cover_image) }}" 
+                                     class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ _('Album Cover') }}">
+                            {% else %}
+                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                                     style="height: 200px;">
+                                    <i class="fas fa-music fa-3x text-muted"></i>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- 播放按钮覆盖层 -->
+                            <div class="position-absolute top-50 start-50 translate-middle">
+                                <button class="btn btn-primary btn-lg rounded-circle play-btn" 
+                                        data-song-id="{{ song.id }}"
+                                        style="width: 60px; height: 60px; opacity: 0.9;">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <a href="{{ url_for('main.song_detail', song_id=song.id) }}" 
+                                   class="text-decoration-none">
+                                    {{ song.title }}
+                                </a>
+                            </h6>
+                            <p class="card-text text-muted">{{ song.artist }}</p>
+                            {% if song.album %}
+                                <p class="card-text"><small class="text-muted">{{ song.album }}</small></p>
+                            {% endif %}
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <i class="fas fa-user"></i> 
+                                    <a href="{{ url_for('main.user_profile', username=song.uploader.username) }}" 
+                                       class="text-decoration-none">
+                                        {{ song.uploader.username }}
+                                    </a>
+                                </small>
+                                <div>
+                                    <small class="text-muted">
+                                        <i class="fas fa-play"></i> {{ song.play_count }}
+                                    </small>
+                                    <small class="text-muted ms-2">
+                                        <i class="fas fa-heart text-danger"></i>
+                                        <span class="likes-count" data-song-id="{{ song.id }}">{{ song.likes_count }}</span>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer bg-transparent">
+                            <div class="d-flex justify-content-between">
+                                {% if current_user.is_authenticated %}
+                                    <button class="btn btn-outline-danger btn-sm favorite-btn" 
+                                            data-song-id="{{ song.id }}"
+                                            data-favorited="{% if current_user.favorites.filter_by(song_id=song.id).first() %}true{% else %}false{% endif %}">
+                                        <i class="{% if current_user.favorites.filter_by(song_id=song.id).first() %}fas fa-heart{% else %}far fa-heart{% endif %}"></i>
+                                    </button>
+                                {% endif %}
+                                <a href="{{ url_for('main.song_detail', song_id=song.id) }}" 
+                                   class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-info-circle"></i> {{ _('Details') }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-star fa-4x text-muted mb-3"></i>
+            <h4 class="text-muted">{{ _('No recommendations available yet') }}</h4>
+            <p class="text-muted">
+                {{ _('Start listening to music and favoriting songs to get personalized recommendations.') }}
+            </p>
+            <a href="{{ url_for('main.library') }}" class="btn btn-primary">{{ _('Explore Music Library') }}</a>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+// 获取CSRF token
+function getCSRFToken() {
+    const token = document.querySelector('meta[name=csrf-token]');
+    return token ? token.getAttribute('content') : '';
+}
+
+// 收藏功能
+document.querySelectorAll('.favorite-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const songId = this.dataset.songId;
+        const isFavorited = this.dataset.favorited === 'true';
+        const icon = this.querySelector('i');
+        
+        fetch(`/song/${songId}/favorite`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                if (data.is_favorited) {
+                    icon.className = 'fas fa-heart';
+                    this.dataset.favorited = 'true';
+                } else {
+                    icon.className = 'far fa-heart';
+                    this.dataset.favorited = 'false';
+                }
+
+                // 更新当前卡片上的收藏数量
+                const likesSpan = document.querySelector(`.likes-count[data-song-id="${songId}"]`);
+                if (likesSpan && typeof data.likes_count !== 'undefined') {
+                    likesSpan.textContent = data.likes_count;
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+});
+</script>
+{% endblock %}
